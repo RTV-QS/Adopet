@@ -58,6 +58,7 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | [Lanchonete#4](https://github.com/RTV-QS/Lanchonete/issues/4) | Quantidades do carrinho são perdidas ao recarregar a página | CT-CR-12 |
 | [Lanchonete#5](https://github.com/RTV-QS/Lanchonete/issues/5) | Carrinho não é compartilhado entre abas | CT-CR-13 |
 | [Lanchonete#6](https://github.com/RTV-QS/Lanchonete/issues/6) | Adicionar o mesmo lanche duas vezes não aumenta a quantidade | CT-CR-14 |
+| [Lanchonete#7](https://github.com/RTV-QS/Lanchonete/issues/7) | Pedido é aceito com a lanchonete fechada | CT-CR-15 |
  
 ## Entrega 2
  
