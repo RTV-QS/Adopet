@@ -26,7 +26,7 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | Integrante | Classe sob teste | Classe de teste | Casos de teste |
 | --- | --- | --- | --- |
 | [Integrante 1] | `AuthenticationResource` | [preencher] | [preencher] |
-| Rafaella Lenzi | `AdotantesResource` | [`AdotantesResourceTest`](src/test/java/com/trabappcorp/Adopet/AdotantesResourceTest.java) | [Planilha CT-AR](https://docs.google.com/spreadsheets/d/1kNhqQ3Kf8I6jEATi3Uo1CHJ_qb-viFWZwZUwESVn2Dc/edit) |
+| Rafaella Lenzi | `AdotantesResource` | [`AdotantesResourceTest`](src/test/java/com/trabappcorp/Adopet/AdotantesResourceTest.java) | [Planilha CT-AR](https://docs.google.com/spreadsheets/d/1APhWzYmzxmuvqNNjlrEM5k-AwzITs-DdwDaY5x-xIso/edit?usp=sharing) |
 | [Integrante 3] | `PetDAO` | [preencher] | [preencher] |
  
 ### Testes manuais (Lanchonete)
