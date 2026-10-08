@@ -189,7 +189,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-11: Negativo")
-    @Disabled("issue #1")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#2")
     void updateFiltroRejeitaNegativo() {
         Response response = resource.updateFiltro(null, null, "-5", null, null, null);
 
@@ -199,7 +199,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-12: NaN")
-    @Disabled("issue #2")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#3")
     void updateFiltroRejeitaNaN() {
         Response response = resource.updateFiltro(null, null, "NaN", null, null, null);
 
@@ -234,7 +234,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-15: Atomicidade da atualização")
-    @Disabled("issue #3")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#4")
     void updateFiltroNaoAlteraNadaQuandoUmCampoEInvalido() {
         adotante.getFiltro().setRaca("Vira-lata");
 
@@ -337,7 +337,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-20: Encadeamento com CT-AR-12")
-    @Disabled("issue #2")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#5")
     void getFiltroComPesoNaN() {
         adotante.getFiltro().setPesoMenor(Double.NaN);
 
