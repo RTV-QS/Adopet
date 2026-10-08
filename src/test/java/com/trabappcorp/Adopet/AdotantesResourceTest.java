@@ -79,7 +79,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-01: Usuário não adotante")
-    void updateFiltroRejeitaNãoAdotante() {
+    void updateFiltroRejeitaNaoAdotante() {
         Doador doador = new Doador("bia", "123", null, "Bia", "doador",
                 "98765432100", new Date());
         when(servletRequest.getAttribute("usuario")).thenReturn(doador);
@@ -104,14 +104,14 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-03: Sentinela de limpeza (texto)")
-    void updateFiltroComEntradaNula() {
-        resource.updateFiltro(null, null, null, "Poodle", null, null);
+    void updateFiltroLimpaCampoDeTexto() {
+        adotante.getFiltro().setRaca("Poodle");
 
         Response response = resource.updateFiltro(null, null, null, "null", null, null);
 
         assertEquals(200, response.getStatus());
-        assertEquals(null, adotante.getFiltro().getRaca());
-        verify(usuarioDAO, times(2)).persist(adotante);
+        assertNull(adotante.getFiltro().getRaca());
+        verify(usuarioDAO).persist(adotante);
     }
 
     @Test
@@ -356,5 +356,5 @@ class AdotantesResourceTest {
         assertEquals(500, response.getStatus());
         JsonObject body = (JsonObject) response.getEntity();
         assertEquals("Erro interno", body.getString("mensagem"));
-}
+    }
 }
