@@ -291,6 +291,17 @@ class AdotantesResourceTest {
         assertEquals("cachorro", adotante.getFiltro().getEspecie());
     }
 
+    @Test
+    @DisplayName("CT-AR-24: Número inválido (peso)")
+    void updateFiltroRejeitaPesoInvalido() {
+        Response response = resource.updateFiltro(null, null, "abc", null, null, null);
+
+        assertEquals(400, response.getStatus());
+        JsonObject body = (JsonObject) response.getEntity();
+        assertEquals("O campo pesoMenor não é um número válido", body.getString("mensagem"));
+        verify(usuarioDAO, never()).persist(any());
+    }
+
     // Testes unitários para o método getFiltro
 
     @Test
