@@ -38,13 +38,26 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | Leonardo Vaz | [funcionalidade] | [preencher] |
  
 ### Defeitos encontrados
- 
+
+**Adopet (testes unitários)**
+
 | Issue | Resumo | Caso de teste |
 | --- | --- | --- |
 | [Adopet#2](https://github.com/RTV-QS/Adopet/issues/2) | `updateFiltro` aceita valor negativo como peso máximo | CT-AR-11 |
 | [Adopet#3](https://github.com/RTV-QS/Adopet/issues/3) | `updateFiltro` aceita NaN como valor numérico | CT-AR-12 |
 | [Adopet#4](https://github.com/RTV-QS/Adopet/issues/4) | `updateFiltro` altera o filtro mesmo quando a requisição é rejeitada | CT-AR-15 |
 | [Adopet#5](https://github.com/RTV-QS/Adopet/issues/5) | `getFiltro` retorna 500 quando o filtro contém NaN | CT-AR-20 |
+
+**Lanchonete (testes manuais)**
+
+| Issue | Resumo | Caso de teste |
+| --- | --- | --- |
+| [Lanchonete#1](https://github.com/RTV-QS/Lanchonete/issues/1) | Valor total do pedido ignora a quantidade dos itens | CT-CR-08 |
+| [Lanchonete#2](https://github.com/RTV-QS/Lanchonete/issues/2) | Pedido é criado com o carrinho vazio | CT-CR-09 |
+| [Lanchonete#3](https://github.com/RTV-QS/Lanchonete/issues/3) | Forma de pagamento e de entrega não são exigidas nem registradas | CT-CR-10, CT-CR-11 |
+| [Lanchonete#4](https://github.com/RTV-QS/Lanchonete/issues/4) | Quantidades do carrinho são perdidas ao recarregar a página | CT-CR-12 |
+| [Lanchonete#5](https://github.com/RTV-QS/Lanchonete/issues/5) | Carrinho não é compartilhado entre abas | CT-CR-13 |
+| [Lanchonete#6](https://github.com/RTV-QS/Lanchonete/issues/6) | Adicionar o mesmo lanche duas vezes não aumenta a quantidade | CT-CR-14 |
  
 ## Entrega 2
  
