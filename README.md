@@ -18,7 +18,7 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | 1. Escopo dos sistemas | Plano de Teste, seção 1.1 | [Plano de Teste](https://docs.google.com/document/d/140v4290iqe8Y4YQBjYshYHFi0e81EmsRfP9LbHvgTYg/edit) |
 | 2. Testes unitários | Classes de teste (ver tabela abaixo) | [`src/test/java`](src/test/java/com/trabappcorp/Adopet) |
 | 3. Plano de Teste (IEEE 829) | Documento no Google Docs | [Plano de Teste](https://docs.google.com/document/d/140v4290iqe8Y4YQBjYshYHFi0e81EmsRfP9LbHvgTYg/edit) |
-| 4. Testes manuais | Casos e execução no TestLink | [Relatório de execução](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanReportCarrinho.pdf) · [Métricas](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCarrinho.pdf) · [Casos (XML)](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-carrinho.xml) |
+| 4. Testes manuais | Casos e execução no TestLink | [Relatório de execução](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · [Métricas](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCarrinho.pdf) · [Casos (XML)](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-carrinho.xml) |
 | 5. Issues | GitHub Issues dos dois forks | [Adopet](https://github.com/RTV-QS/Adopet/issues) · [Lanchonete](https://github.com/RTV-QS/lanchonete/issues) |
  
 ### Testes unitários (Adopet)
@@ -33,7 +33,7 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
  
 | Integrante | Funcionalidade | Registro |
 | --- | --- | --- |
-| Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanReportCarrinho.pdf) |
+| Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) |
 | Thiago Moutinho | [funcionalidade] | [preencher] |
 | Leonardo Vaz | [funcionalidade] | [preencher] |
  
