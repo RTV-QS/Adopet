@@ -33,7 +33,7 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
  
 | Integrante | Funcionalidade | Registro |
 | --- | --- | --- |
-| Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) |
+| Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · [Planilha CT-CR](https://docs.google.com/spreadsheets/d/1g0kw0XVC-zGDFqql9p14jj0e2WOVgpvdOolvmPowzfQ/edit?usp=sharing)|
 | Thiago Moutinho | [funcionalidade] | [preencher] |
 | Leonardo Vaz | [funcionalidade] | [preencher] |
  
