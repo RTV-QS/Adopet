@@ -16,16 +16,28 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | Item | Artefato | Link |
 | --- | --- | --- |
 | 1. Escopo dos sistemas | Plano de Teste, seção 1.1 | [Plano de Teste](https://docs.google.com/document/d/140v4290iqe8Y4YQBjYshYHFi0e81EmsRfP9LbHvgTYg/edit) |
-| 2. Testes unitários | Classes de teste (ver tabela abaixo) | [`src/test/java`](src/test/java/com/trabappcorp/Adopet) |
+| 2. Testes unitários | Classes de teste e planilhas de casos (ver tabela abaixo) | [`src/test/java`](src/test/java/com/trabappcorp/Adopet) · [`docs/entrega1/testes-unitarios`](docs/entrega1/testes-unitarios) |
 | 3. Plano de Teste (IEEE 829) | Documento no Google Docs | [Plano de Teste](https://docs.google.com/document/d/140v4290iqe8Y4YQBjYshYHFi0e81EmsRfP9LbHvgTYg/edit) |
-| 4. Testes manuais | Casos e execução no TestLink | [Relatório de execução](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · [Métricas](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCarrinho.pdf) · [Casos (XML)](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-carrinho.xml) |
+| 4. Testes manuais | Casos e execução, por funcionalidade (ver tabela abaixo) | [Relatório de execução (TestLink)](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · [Métricas](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCarrinho.pdf) · [Casos (XML)](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-carrinho.xml) · [`docs/entrega1/testes-manuais`](https://github.com/RTV-QS/Lanchonete/tree/trabalho-qs/docs/entrega1/testes-manuais) |
 | 5. Issues | GitHub Issues dos dois forks | [Adopet](https://github.com/RTV-QS/Adopet/issues) · [Lanchonete](https://github.com/RTV-QS/lanchonete/issues) |
  
 ### Testes unitários (Adopet)
- 
+
+Toda a suíte roda sem banco de dados, com um único comando:
+
+```bash
+mvn test
+```
+
+Requer JDK 21. JDKs mais novos não são compatíveis com o Mockito 4 — ver Plano de
+Teste, seção 4.2. Os testes que apontam defeitos confirmados estão marcados com
+`@Disabled` referenciando a issue correspondente, conforme a regra de triagem da
+seção 2.3 do Plano de Teste, de forma que a suíte fica verde e os defeitos
+seguem rastreáveis.
+
 | Integrante | Classe sob teste | Classe de teste | Casos de teste |
 | --- | --- | --- | --- |
-| [Integrante 1] | `AuthenticationResource` | [preencher] | [preencher] |
+| Leonardo Vaz | `AuthenticationResource` | [`AuthenticationResourceTest`](src/test/java/com/trabappcorp/Adopet/AuthenticationResourceTest.java) | [Planilha CT-AU](https://docs.google.com/spreadsheets/d/1GhxLh4pKMCooLMxSzE9t9OwpoMXqXKp_mi8opR8Rtg4/edit?usp=sharing) · [CSV](docs/entrega1/testes-unitarios/casos-teste-CT-AU.csv) |
 | Rafaella Lenzi | `AdotantesResource` | [`AdotantesResourceTest`](src/test/java/com/trabappcorp/Adopet/AdotantesResourceTest.java) | [Planilha CT-AR](https://docs.google.com/spreadsheets/d/1APhWzYmzxmuvqNNjlrEM5k-AwzITs-DdwDaY5x-xIso/edit?usp=sharing) |
 | [Integrante 3] | `PetDAO` | [preencher] | [preencher] |
  
@@ -35,7 +47,7 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | --- | --- | --- |
 | Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · Casos de Teste: [Planilha CT-CR](https://docs.google.com/spreadsheets/d/1g0kw0XVC-zGDFqql9p14jj0e2WOVgpvdOolvmPowzfQ/edit?usp=sharing)|
 | Thiago Moutinho | [funcionalidade] | [preencher] |
-| Leonardo Vaz | [funcionalidade] | [preencher] |
+| Leonardo Vaz | Cadastro e login do cliente | TestLink: [relatório de execução](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCadastroLogin.pdf) · [métricas](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCadastroLogin.pdf) · [plano](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanReportCadastroLogin.pdf) · [casos (XML)](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-cadastro-login.xml) · Casos de Teste: [Planilha CT-AL](https://docs.google.com/spreadsheets/d/1x4TJoBn1zPQOh_yKTHckskp6BNqWBVY8SZEQvnCfwCg/edit?usp=sharing) · [CSV](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/casos-teste-CT-AL.csv) · [Verificação de backend](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/verificacao-backend-cadastro-login.md) |
  
 ### Defeitos encontrados
 
@@ -47,6 +59,16 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | [Adopet#3](https://github.com/RTV-QS/Adopet/issues/3) | `updateFiltro` aceita NaN como valor numérico | CT-AR-12 |
 | [Adopet#4](https://github.com/RTV-QS/Adopet/issues/4) | `updateFiltro` altera o filtro mesmo quando a requisição é rejeitada | CT-AR-15 |
 | [Adopet#5](https://github.com/RTV-QS/Adopet/issues/5) | `getFiltro` retorna 500 quando o filtro contém NaN | CT-AR-20 |
+| [Adopet#6](https://github.com/RTV-QS/Adopet/issues/6) | `register` grava o adotante com o login no lugar do nome | CT-AU-19 |
+| [Adopet#7](https://github.com/RTV-QS/Adopet/issues/7) | `register` conclui o cadastro sem data de nascimento quando o campo vem vazio | CT-AU-26 |
+| [Adopet#8](https://github.com/RTV-QS/Adopet/issues/8) | `register` rejeita data no formato ISO de data (`yyyy-MM-dd`) | CT-AU-28 |
+| [Adopet#9](https://github.com/RTV-QS/Adopet/issues/9) | `register` aceita número negativo de animais no cadastro de instituição | CT-AU-36 |
+| [Adopet#10](https://github.com/RTV-QS/Adopet/issues/10) | `register` aceita instituição com mais animais do que a capacidade | CT-AU-37 |
+| [Adopet#11](https://github.com/RTV-QS/Adopet/issues/11) | `register` aceita instituição sem certificações, embora a coluna seja NOT NULL | CT-AU-38 |
+| [Adopet#12](https://github.com/RTV-QS/Adopet/issues/12) | `register` consulta o banco antes de validar os parâmetros da requisição | CT-AU-17 |
+| [Adopet#13](https://github.com/RTV-QS/Adopet/issues/13) | `authenticate` devolve a mensagem interna da exceção no corpo da resposta | CT-AU-10 |
+| [Adopet#14](https://github.com/RTV-QS/Adopet/issues/14) | Token JWT é emitido sem expiração | CT-AU-11 |
+| [Adopet#15](https://github.com/RTV-QS/Adopet/issues/15) | Senha é gravada e comparada em texto puro | CT-AU-43 |
 
 **Lanchonete (testes manuais)**
 
@@ -59,6 +81,13 @@ Usamos dois sistemas, que se complementam: o Adopet tem as classes de maior comp
 | [Lanchonete#5](https://github.com/RTV-QS/Lanchonete/issues/5) | Carrinho não é compartilhado entre abas | CT-CR-13 |
 | [Lanchonete#6](https://github.com/RTV-QS/Lanchonete/issues/6) | Adicionar o mesmo lanche duas vezes não aumenta a quantidade | CT-CR-14 |
 | [Lanchonete#7](https://github.com/RTV-QS/Lanchonete/issues/7) | Pedido é aceito com a lanchonete fechada | CT-CR-15 |
+| [Lanchonete#8](https://github.com/RTV-QS/Lanchonete/issues/8) | Cadastro permite usuário duplicado e o dono original perde o acesso à conta | CT-AL-06, CT-AL-07 |
+| [Lanchonete#9](https://github.com/RTV-QS/Lanchonete/issues/9) | Login de usuário com apóstrofo falha com erro 500 por SQL concatenado | CT-AL-10 |
+| [Lanchonete#10](https://github.com/RTV-QS/Lanchonete/issues/10) | Cadastro não valida nenhum campo: grava cliente com nome ou usuário vazio | CT-AL-03, CT-AL-04, CT-AL-05 |
+| [Lanchonete#11](https://github.com/RTV-QS/Lanchonete/issues/11) | Logout invalida apenas o token apresentado e os tokens antigos não expiram | CT-AL-17 |
+| [Lanchonete#12](https://github.com/RTV-QS/Lanchonete/issues/12) | Cadastro aceita senha composta apenas de espaços | CT-AL-08 |
+| [Lanchonete#13](https://github.com/RTV-QS/Lanchonete/issues/13) | Tela de login pede E-mail, mas o sistema autentica por nome de usuário | CT-AL-19 |
+| [Lanchonete#14](https://github.com/RTV-QS/Lanchonete/issues/14) | Conexões com o banco nunca são fechadas e esgotam o PostgreSQL | [Verificação de backend](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/verificacao-backend-cadastro-login.md) |
  
 ## Entrega 2
  
