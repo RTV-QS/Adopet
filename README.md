@@ -89,7 +89,3 @@ seguem rastreáveis.
 | [Lanchonete#12](https://github.com/RTV-QS/Lanchonete/issues/12) | Cadastro aceita senha composta apenas de espaços | CT-AL-08 |
 | [Lanchonete#13](https://github.com/RTV-QS/Lanchonete/issues/13) | Tela de login pede E-mail, mas o sistema autentica por nome de usuário | CT-AL-19 |
 | [Lanchonete#14](https://github.com/RTV-QS/Lanchonete/issues/14) | Conexões com o banco nunca são fechadas e esgotam o PostgreSQL | [Verificação de backend](https://github.com/RTV-QS/Lanchonete/blob/master/docs/entrega1/testes-manuais/CadastroLogin/verificacao-backend-cadastro-login.md) |
- 
-## Entrega 2
- 
-A preencher.
