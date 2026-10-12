@@ -20,7 +20,27 @@ import org.mockito.MockedStatic;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+/**
+ * Casos de teste unitários da classe PetDAO (CT-PD): 84 execuções.
+ *
+ * Complexidade ciclomática da classe sob teste: 17 (findPetsFor = 14),
+ * medida com lizard e registrada no Plano de Teste, seção 1.1.
+ * A suíte cobre a montagem da consulta, não as operações genéricas de CRUD.
+ *
+ * Técnica de isolamento: mockStatic de EntityManagerSingleton para evitar
+ * a abertura de um EntityManager real no construtor de JpaDAO. EntityManager
+ * e TypedQuery são mocks; cada caso instancia um PetDAO pelo construtor privado
+ * via reflexão, sem compartilhar o estado do singleton entre os testes.
+ *
+ * Técnicas de projeto: partição de equivalência para as 64 combinações dos
+ * seis filtros opcionais e análise de valores próximos de zero e entradas
+ * textuais para 18 casos adicionais. Dois casos verificam lista vazia e falha
+ * da dependência. Entradas e resultados estão na planilha e no CSV CT-PD.
+ *
+ * Oráculo: código, com asserções sobre JPQL, parâmetros, identidade da lista
+ * e interações. A filtragem em banco real pertence à integração da Entrega 2.
+ * Nenhum caso está desabilitado: os 84 passaram sem defeito novo confirmado.
+ */
 class PetDAOTest {
     private static final String BASE = "SELECT P FROM modelo.Pet P JOIN P.variacao V ";
     private static final String[] NAMES = {"alturaMenor", "gastoMensalMenor", "pesoMenor", "especie", "porte", "raca"};

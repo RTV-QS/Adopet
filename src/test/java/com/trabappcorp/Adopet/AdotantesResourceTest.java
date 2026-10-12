@@ -33,6 +33,21 @@ import DAO.UsuarioDAO;
 import modelo.Adotante;
 import modelo.Doador;
 
+/**
+ * Casos de teste unitários da classe AdotantesResource (CT-AR-01 a CT-AR-24).
+ *
+ * Complexidade ciclomática da classe sob teste: 21 (updateFiltro = 16, getFiltro = 5),
+ * medida com a ferramenta lizard. Escopo e divisão estão no Plano de Teste, seção 1.1.
+ *
+ * Técnica de isolamento desta classe: mockStatic no UsuarioDAO, único DAO alcançado
+ * por updateFiltro. Sem o mockStatic, o construtor de JpaDAO tentaria abrir um
+ * EntityManager real e os testes dependeriam do banco.
+ *
+ * Técnicas de projeto dos casos: partição de equivalência e análise de valor limite.
+ * O oráculo de cada caso está declarado na planilha CT-AR e, quando é o domínio e o
+ * sistema discorda, o teste fica com @Disabled apontando a issue, conforme a regra
+ * de triagem do Plano de Teste, seção 2.3.
+ */
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class AdotantesResourceTest {
@@ -189,7 +204,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-11: Negativo")
-    @Disabled("Defeito conhecido: RTV-QS/Adopet#2")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#2 (BUG-AD-01)")
     void updateFiltroRejeitaNegativo() {
         Response response = resource.updateFiltro(null, null, "-5", null, null, null);
 
@@ -198,8 +213,8 @@ class AdotantesResourceTest {
     }
 
     @Test
-    @DisplayName("CT-AR-12: NaN")
-    @Disabled("Defeito conhecido: RTV-QS/Adopet#3")
+    @DisplayName("CT-AR-12: Não numérico especial")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#3 (BUG-AD-02)")
     void updateFiltroRejeitaNaN() {
         Response response = resource.updateFiltro(null, null, "NaN", null, null, null);
 
@@ -234,7 +249,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-15: Atomicidade da atualização")
-    @Disabled("Defeito conhecido: RTV-QS/Adopet#4")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#4 (BUG-AD-03)")
     void updateFiltroNaoAlteraNadaQuandoUmCampoEInvalido() {
         adotante.getFiltro().setRaca("Vira-lata");
 
@@ -348,7 +363,7 @@ class AdotantesResourceTest {
 
     @Test
     @DisplayName("CT-AR-20: Encadeamento com CT-AR-12")
-    @Disabled("Defeito conhecido: RTV-QS/Adopet#5")
+    @Disabled("Defeito conhecido: RTV-QS/Adopet#5 (BUG-AD-04)")
     void getFiltroComPesoNaN() {
         adotante.getFiltro().setPesoMenor(Double.NaN);
 
