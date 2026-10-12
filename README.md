@@ -39,14 +39,14 @@ seguem rastreáveis.
 | --- | --- | --- | --- |
 | Leonardo Vaz | `AuthenticationResource` | [`AuthenticationResourceTest`](src/test/java/com/trabappcorp/Adopet/AuthenticationResourceTest.java) | [Planilha CT-AU](https://docs.google.com/spreadsheets/d/1GhxLh4pKMCooLMxSzE9t9OwpoMXqXKp_mi8opR8Rtg4/edit?usp=sharing) · [CSV](docs/entrega1/testes-unitarios/casos-teste-CT-AU.csv) |
 | Rafaella Lenzi | `AdotantesResource` | [`AdotantesResourceTest`](src/test/java/com/trabappcorp/Adopet/AdotantesResourceTest.java) | [Planilha CT-AR](https://docs.google.com/spreadsheets/d/1APhWzYmzxmuvqNNjlrEM5k-AwzITs-DdwDaY5x-xIso/edit?usp=sharing) |
-| [Integrante 3] | `PetDAO` | [preencher] | [preencher] |
+| Thiago Moutinho | `PetDAO` (`findPetsFor`) | [`PetDAOTest`](src/test/java/com/trabappcorp/Adopet/PetDAOTest.java) | [Planilha CT-PD](docs/entrega1/testes-unitarios/CT-PD_PetDAO_Thiago.xlsx) · [CSV](docs/entrega1/testes-unitarios/casos-teste-CT-PD.csv) · [execução](docs/entrega1/testes-unitarios/DAO.PetDAOTest.txt) |
  
 ### Testes manuais (Lanchonete)
  
 | Integrante | Funcionalidade | Registro |
 | --- | --- | --- |
 | Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · Casos de Teste: [Planilha CT-CR](https://docs.google.com/spreadsheets/d/1g0kw0XVC-zGDFqql9p14jj0e2WOVgpvdOolvmPowzfQ/edit?usp=sharing)|
-| Thiago Moutinho | [funcionalidade] | [preencher] |
+| Thiago Moutinho | Consulta do cardápio | TestLink: [relatório de execução](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCardapio.pdf) · [métricas](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCardapio.pdf) · [plano](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanReportCardapio.pdf) · [casos (XML)](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-cardapio.xml) · [planilha CT-CM](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/CT-CM_Cardapio_Thiago.xlsx) · [CSV](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/casos-teste-CT-CM.csv) |
 | Leonardo Vaz | Cadastro e login do cliente | TestLink: [relatório de execução](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCadastroLogin.pdf) · [métricas](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCadastroLogin.pdf) · [plano](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanReportCadastroLogin.pdf) · [casos (XML)](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-cadastro-login.xml) · Casos de Teste: [Planilha CT-AL](https://docs.google.com/spreadsheets/d/1x4TJoBn1zPQOh_yKTHckskp6BNqWBVY8SZEQvnCfwCg/edit?usp=sharing) · [CSV](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/casos-teste-CT-AL.csv) · [Verificação de backend](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/verificacao-backend-cadastro-login.md) |
  
 ### Defeitos encontrados
