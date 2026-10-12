@@ -39,7 +39,7 @@ seguem rastreáveis.
 | --- | --- | --- | --- |
 | Leonardo Vaz | `AuthenticationResource` | [`AuthenticationResourceTest`](src/test/java/com/trabappcorp/Adopet/AuthenticationResourceTest.java) | [Planilha CT-AU](https://docs.google.com/spreadsheets/d/1GhxLh4pKMCooLMxSzE9t9OwpoMXqXKp_mi8opR8Rtg4/edit?usp=sharing) · [CSV](docs/entrega1/testes-unitarios/casos-teste-CT-AU.csv) |
 | Rafaella Lenzi | `AdotantesResource` | [`AdotantesResourceTest`](src/test/java/com/trabappcorp/Adopet/AdotantesResourceTest.java) | [Planilha CT-AR](https://docs.google.com/spreadsheets/d/1APhWzYmzxmuvqNNjlrEM5k-AwzITs-DdwDaY5x-xIso/edit?usp=sharing) |
-| Thiago Moutinho | `PetDAO` (`findPetsFor`) | [`PetDAOTest`](src/test/java/com/trabappcorp/Adopet/PetDAOTest.java) | [Planilha CT-PD](docs/entrega1/testes-unitarios/CT-PD_PetDAO_Thiago.xlsx) · [CSV](docs/entrega1/testes-unitarios/casos-teste-CT-PD.csv) · [execução](docs/entrega1/testes-unitarios/DAO.PetDAOTest.txt) |
+| Thiago Moutinho | `PetDAO` | [`PetDAOTest`](src/test/java/com/trabappcorp/Adopet/PetDAOTest.java) | [Planilha CT-PD](docs/entrega1/testes-unitarios/CT-PD_PetDAO_Thiago.xlsx) · [CSV](docs/entrega1/testes-unitarios/casos-teste-CT-PD.csv) · [execução](docs/entrega1/testes-unitarios/DAO.PetDAOTest.txt) |
  
 ### Testes manuais (Lanchonete)
  
