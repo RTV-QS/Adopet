@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
  * Técnicas de projeto: partição de equivalência para as 64 combinações dos
  * seis filtros opcionais e análise de valores próximos de zero e entradas
  * textuais para 18 casos adicionais. Dois casos verificam lista vazia e falha
- * da dependência. Entradas e resultados estão na planilha e no CSV CT-PD.
+ * da dependência. Entradas e resultados estão no CSV CT-PD.
  *
  * Oráculo: código, com asserções sobre JPQL, parâmetros, identidade da lista
  * e interações. A filtragem em banco real pertence à integração da Entrega 2.
