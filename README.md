@@ -47,7 +47,7 @@ seguem rastreáveis.
 | --- | --- | --- |
 | Rafaella Lenzi | Carrinho e finalização do pedido | TestLink: [relatório](https://github.com/RTV-QS/lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCarrinho.pdf) · Casos de Teste: [Planilha CT-CR](https://docs.google.com/spreadsheets/d/1g0kw0XVC-zGDFqql9p14jj0e2WOVgpvdOolvmPowzfQ/edit?usp=sharing)|
 | Thiago Moutinho | [funcionalidade] | [preencher] |
-| Leonardo Vaz | Cadastro e login do cliente | Casos de Teste: [Planilha CT-AL](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/casos-teste-CT-AL.csv) |
+| Leonardo Vaz | Cadastro e login do cliente | TestLink: [relatório de execução](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanExecutionReportCadastroLogin.pdf) · [métricas](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/GeneralTestPlanReportCadastroLogin.pdf) · [plano](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/TestPlanReportCadastroLogin.pdf) · [casos (XML)](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/testlink-cadastro-login.xml) · Casos de Teste: [Planilha CT-AL](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/casos-teste-CT-AL.csv) · [Verificação de backend](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/verificacao-backend-cadastro-login.md) |
  
 ### Defeitos encontrados
 
@@ -81,6 +81,13 @@ seguem rastreáveis.
 | [Lanchonete#5](https://github.com/RTV-QS/Lanchonete/issues/5) | Carrinho não é compartilhado entre abas | CT-CR-13 |
 | [Lanchonete#6](https://github.com/RTV-QS/Lanchonete/issues/6) | Adicionar o mesmo lanche duas vezes não aumenta a quantidade | CT-CR-14 |
 | [Lanchonete#7](https://github.com/RTV-QS/Lanchonete/issues/7) | Pedido é aceito com a lanchonete fechada | CT-CR-15 |
+| [Lanchonete#8](https://github.com/RTV-QS/Lanchonete/issues/8) | Cadastro permite usuário duplicado e o dono original perde o acesso à conta | CT-AL-06, CT-AL-07 |
+| [Lanchonete#9](https://github.com/RTV-QS/Lanchonete/issues/9) | Login de usuário com apóstrofo falha com erro 500 por SQL concatenado | CT-AL-10 |
+| [Lanchonete#10](https://github.com/RTV-QS/Lanchonete/issues/10) | Cadastro não valida nenhum campo: grava cliente com nome ou usuário vazio | CT-AL-03, CT-AL-04, CT-AL-05 |
+| [Lanchonete#11](https://github.com/RTV-QS/Lanchonete/issues/11) | Logout invalida apenas o token apresentado e os tokens antigos não expiram | CT-AL-17 |
+| [Lanchonete#12](https://github.com/RTV-QS/Lanchonete/issues/12) | Cadastro aceita senha composta apenas de espaços | CT-AL-08 |
+| [Lanchonete#13](https://github.com/RTV-QS/Lanchonete/issues/13) | Tela de login pede E-mail, mas o sistema autentica por nome de usuário | CT-AL-19 |
+| [Lanchonete#14](https://github.com/RTV-QS/Lanchonete/issues/14) | Conexões com o banco nunca são fechadas e esgotam o PostgreSQL | [Verificação de backend](https://github.com/RTV-QS/Lanchonete/blob/trabalho-qs/docs/entrega1/testes-manuais/verificacao-backend-cadastro-login.md) |
  
 ## Entrega 2
  
