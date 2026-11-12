@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InstituicoesResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">com.trabappcorp.Adopet</a> &gt; <span class="el_source">InstituicoesResource.java</span></div><h1>InstituicoesResource.java</h1><pre class="source lang-java linenums">package com.trabappcorp.Adopet;
+
+import DAO.InstituicaoDAO;
+import Utils.JSONArrayBuilder;
+import Utils.JSONBuilder;
+import Utils.ValidationWrapper;
+import filters.Authorize;
+import modelo.Contato;
+import modelo.Instituicao;
+import modelo.Pet;
+import modelo.Usuario;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.reverseOrder;
+import modelo.Adotante;
+import modelo.Doador;
+
+@Path(&quot;instituicoes&quot;)
+<span class="nc" id="L35">public class InstituicoesResource extends UsersResource {</span>
+
+    private @Context
+    HttpServletRequest servletRequest;
+
+    /* GET - &quot;/encontrar/adotar&quot; - retorna as instituicoes da cidade do usuario autenticado
+    priorizando as mais cheias */
+    @GET
+    @Path(&quot;/adotar&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findInstituicaoToAdopt() {
+
+<span class="nc" id="L48">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc" id="L52">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L55">                throw new HttpErrors.Unauthorized(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L58">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L60">            InstituicaoDAO instituicoesDAO = InstituicaoDAO.getInstance();</span>
+<span class="nc" id="L61">            List&lt;Instituicao&gt; instituicoes = instituicoesDAO.findFor(adotante);</span>
+
+<span class="nc" id="L63">            JSONArrayBuilder instituicoesJson = new JSONArrayBuilder();</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            for (Instituicao instituicao : instituicoes) {</span>
+<span class="nc" id="L66">                JSONBuilder enderecoJson = new JSONBuilder();</span>
+<span class="nc" id="L67">                enderecoJson</span>
+<span class="nc" id="L68">                        .add(&quot;estado&quot;, instituicao.getEndereco().getEstado())</span>
+<span class="nc" id="L69">                        .add(&quot;cidade&quot;, instituicao.getEndereco().getCidade())</span>
+<span class="nc" id="L70">                        .add(&quot;bairro&quot;, instituicao.getEndereco().getBairro())</span>
+<span class="nc" id="L71">                        .add(&quot;rua&quot;, instituicao.getEndereco().getRua())</span>
+<span class="nc" id="L72">                        .add(&quot;numero&quot;, instituicao.getEndereco().getNumero());</span>
+
+<span class="nc" id="L74">                JSONArrayBuilder contatosJson = new JSONArrayBuilder();</span>
+<span class="nc" id="L75">                List&lt;Contato&gt; contatosInstituicao = instituicao.getContatos();</span>
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                for (Contato contato : contatosInstituicao) {</span>
+<span class="nc" id="L78">                    JSONBuilder contatoJson = new JSONBuilder();</span>
+<span class="nc" id="L79">                    contatoJson</span>
+<span class="nc" id="L80">                            .add(&quot;nome&quot;, contato.getNome())</span>
+<span class="nc" id="L81">                            .add(&quot;info&quot;, contato.getInfo())</span>
+<span class="nc" id="L82">                            .add(&quot;tipo&quot;, contato.getTipo());</span>
+
+<span class="nc" id="L84">                    contatosJson.add(contatoJson);</span>
+<span class="nc" id="L85">                }</span>
+
+<span class="nc" id="L87">                JSONBuilder instituicaoJson = new JSONBuilder();</span>
+<span class="nc" id="L88">                instituicaoJson</span>
+<span class="nc" id="L89">                        .add(&quot;id&quot;, instituicao.getId())</span>
+<span class="nc" id="L90">                        .add(&quot;nome&quot;, instituicao.getNome())</span>
+<span class="nc" id="L91">                        .add(&quot;razaoSocial&quot;, instituicao.getRazaoSocial())</span>
+<span class="nc" id="L92">                        .add(&quot;numeroRegistro&quot;, instituicao.getNumeroRegistro())</span>
+<span class="nc" id="L93">                        .add(&quot;dataFundacao&quot;, instituicao.getDataFundacao().toString())</span>
+<span class="nc" id="L94">                        .add(&quot;certificacoes&quot;, instituicao.getCertificacoes())</span>
+<span class="nc" id="L95">                        .add(&quot;capacidade&quot;, instituicao.getCapacidade())</span>
+<span class="nc" id="L96">                        .add(&quot;numeroAnimais&quot;, instituicao.getNumeroAnimais())</span>
+<span class="nc" id="L97">                        .add(&quot;endereco&quot;, enderecoJson)</span>
+<span class="nc" id="L98">                        .add(&quot;contatos&quot;, contatosJson)</span>
+<span class="nc" id="L99">                        .add(&quot;perfil&quot;, instituicao.getPerfil());</span>
+
+<span class="nc" id="L101">                instituicoesJson.add(instituicaoJson);</span>
+
+<span class="nc" id="L103">            }</span>
+
+<span class="nc" id="L105">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L106">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L108">                                    .add(&quot;instituicoes&quot;, instituicoesJson)</span>
+<span class="nc" id="L109">                                    .build()</span>
+<span class="nc" id="L110">                    ).build();</span>
+
+<span class="nc" id="L112">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L113">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L114">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L116">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L117">                                    .build()</span>
+<span class="nc" id="L118">                    ).build();</span>
+<span class="nc" id="L119">        } catch (Exception ex) {</span>
+<span class="nc" id="L120">            System.out.println(ex);</span>
+<span class="nc" id="L121">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L123">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L124">                    .build();</span>
+        }
+
+    }
+
+
+    /* GET - &quot;/encontrar/doar&quot; - retorna as instituicoes da cidade do usuario autenticado
+    priorizando as mais vazias */
+    @GET
+    @Path(&quot;/doar&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findInstituicaoToDonate() {
+
+<span class="nc" id="L138">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc" id="L142">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;doador&quot;)) {</span>
+<span class="nc" id="L145">                throw new HttpErrors.Unauthorized(&quot;Usuário autenticado não é um doador&quot;);</span>
+            }
+
+<span class="nc" id="L148">            Doador doador = (Doador) usuario;</span>
+
+<span class="nc" id="L150">            InstituicaoDAO instituicoesDAO = InstituicaoDAO.getInstance();</span>
+<span class="nc" id="L151">            List&lt;Instituicao&gt; instituicoes = instituicoesDAO.findFor(doador);</span>
+
+<span class="nc" id="L153">            JSONArrayBuilder instituicoesJson = new JSONArrayBuilder();</span>
+
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            for (Instituicao instituicao : instituicoes) {</span>
+<span class="nc" id="L156">                JSONBuilder enderecoJson = new JSONBuilder();</span>
+<span class="nc" id="L157">                enderecoJson</span>
+<span class="nc" id="L158">                        .add(&quot;estado&quot;, instituicao.getEndereco().getEstado())</span>
+<span class="nc" id="L159">                        .add(&quot;cidade&quot;, instituicao.getEndereco().getCidade())</span>
+<span class="nc" id="L160">                        .add(&quot;bairro&quot;, instituicao.getEndereco().getBairro())</span>
+<span class="nc" id="L161">                        .add(&quot;rua&quot;, instituicao.getEndereco().getRua())</span>
+<span class="nc" id="L162">                        .add(&quot;numero&quot;, instituicao.getEndereco().getNumero());</span>
+
+<span class="nc" id="L164">                JSONArrayBuilder contatosJson = new JSONArrayBuilder();</span>
+<span class="nc" id="L165">                List&lt;Contato&gt; contatosInstituicao = instituicao.getContatos();</span>
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                for (Contato contato : contatosInstituicao) {</span>
+<span class="nc" id="L168">                    JSONBuilder contatoJson = new JSONBuilder();</span>
+<span class="nc" id="L169">                    contatoJson</span>
+<span class="nc" id="L170">                            .add(&quot;nome&quot;, contato.getNome())</span>
+<span class="nc" id="L171">                            .add(&quot;info&quot;, contato.getInfo())</span>
+<span class="nc" id="L172">                            .add(&quot;tipo&quot;, contato.getTipo());</span>
+
+<span class="nc" id="L174">                    contatosJson.add(contatoJson);</span>
+<span class="nc" id="L175">                }</span>
+
+<span class="nc" id="L177">                JSONBuilder instituicaoJson = new JSONBuilder();</span>
+<span class="nc" id="L178">                instituicaoJson</span>
+<span class="nc" id="L179">                        .add(&quot;id&quot;, instituicao.getId())</span>
+<span class="nc" id="L180">                        .add(&quot;nome&quot;, instituicao.getNome())</span>
+<span class="nc" id="L181">                        .add(&quot;razaoSocial&quot;, instituicao.getRazaoSocial())</span>
+<span class="nc" id="L182">                        .add(&quot;numeroRegistro&quot;, instituicao.getNumeroRegistro())</span>
+<span class="nc" id="L183">                        .add(&quot;dataFundacao&quot;, instituicao.getDataFundacao().toString())</span>
+<span class="nc" id="L184">                        .add(&quot;certificacoes&quot;, instituicao.getCertificacoes())</span>
+<span class="nc" id="L185">                        .add(&quot;capacidade&quot;, instituicao.getCapacidade())</span>
+<span class="nc" id="L186">                        .add(&quot;numeroAnimais&quot;, instituicao.getNumeroAnimais())</span>
+<span class="nc" id="L187">                        .add(&quot;endereco&quot;, enderecoJson)</span>
+<span class="nc" id="L188">                        .add(&quot;contatos&quot;, contatosJson)</span>
+<span class="nc" id="L189">                        .add(&quot;perfil&quot;, instituicao.getPerfil());</span>
+
+<span class="nc" id="L191">                instituicoesJson.add(instituicaoJson);</span>
+
+<span class="nc" id="L193">            }</span>
+
+<span class="nc" id="L195">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L196">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L198">                                    .add(&quot;instituicoes&quot;, instituicoesJson)</span>
+<span class="nc" id="L199">                                    .build()</span>
+<span class="nc" id="L200">                    ).build();</span>
+
+<span class="nc" id="L202">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L203">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L204">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L206">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L207">                                    .build()</span>
+<span class="nc" id="L208">                    ).build();</span>
+<span class="nc" id="L209">        } catch (Exception ex) {</span>
+<span class="nc" id="L210">            System.out.println(ex);</span>
+<span class="nc" id="L211">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L213">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L214">                    .build();</span>
+        }
+
+    }
+
+    @GET
+    @Path(&quot;/{instituicaoId}/pets&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRegisteredPets(@PathParam(&quot;instituicaoId&quot;) String instituicaoId_str) {
+
+<span class="nc" id="L224">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L227">            JSONArrayBuilder petsJson = new JSONArrayBuilder();</span>
+
+<span class="nc" id="L229">            Long instituicaoId = ValidationWrapper.parseLongId(&quot;instituicaoId&quot;, instituicaoId_str);</span>
+            
+<span class="nc" id="L231">            InstituicaoDAO instDao = InstituicaoDAO.getInstance();</span>
+            
+<span class="nc" id="L233">            Instituicao instituicao = instDao.getById(instituicaoId);</span>
+            
+<span class="nc bnc" id="L235" title="All 2 branches missed.">            if(instituicao == null) throw new HttpErrors.NotFound(&quot;Instituicao não foi encontrada&quot;);</span>
+            
+<span class="nc" id="L237">            List&lt;Pet&gt; pets = instituicao.getPetsCadastrados();</span>
+
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            for (Pet pet : pets) {</span>
+<span class="nc" id="L240">                JSONBuilder petJson = new JSONBuilder();</span>
+<span class="nc" id="L241">                petJson</span>
+<span class="nc" id="L242">                        .add(&quot;id&quot;, pet.getId())</span>
+<span class="nc" id="L243">                        .add(&quot;adotado&quot;, pet.getAdotado())</span>
+<span class="nc" id="L244">                        .add(&quot;altura&quot;, pet.getAltura())</span>
+<span class="nc" id="L245">                        .add(&quot;fotos&quot;, pet.getFotos())</span>
+<span class="nc" id="L246">                        .add(&quot;gastoMensal&quot;, pet.getGastoMensal())</span>
+<span class="nc" id="L247">                        .add(&quot;nome&quot;, pet.getNome())</span>
+<span class="nc" id="L248">                        .add(&quot;observacoes&quot;, pet.getObservacoes())</span>
+<span class="nc" id="L249">                        .add(&quot;peso&quot;, pet.getPeso())</span>
+<span class="nc" id="L250">                        .add(&quot;dataNascimento&quot;, pet.getDataNascimento().toString())</span>
+<span class="nc" id="L251">                        .add(&quot;variacao&quot;, pet.getVariacao().getId());</span>
+
+<span class="nc" id="L253">                petsJson.add(petJson);</span>
+<span class="nc" id="L254">            }</span>
+
+<span class="nc" id="L256">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L257">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L259">                                    .add(&quot;pets&quot;, petsJson)</span>
+<span class="nc" id="L260">                                    .build()</span>
+<span class="nc" id="L261">                    ).build();</span>
+
+<span class="nc" id="L263">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L264">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L265">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L267">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L268">                                    .build()</span>
+<span class="nc" id="L269">                    ).build();</span>
+<span class="nc" id="L270">        } catch (Exception ex) {</span>
+<span class="nc" id="L271">            System.out.println(ex);</span>
+<span class="nc" id="L272">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L274">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L275">                    .build();</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

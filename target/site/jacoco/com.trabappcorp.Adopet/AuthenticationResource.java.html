@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticationResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">com.trabappcorp.Adopet</a> &gt; <span class="el_source">AuthenticationResource.java</span></div><h1>AuthenticationResource.java</h1><pre class="source lang-java linenums">package com.trabappcorp.Adopet;
+
+import DAO.AdotanteDAO;
+import DAO.DoadorDAO;
+import DAO.InstituicaoDAO;
+import DAO.UsuarioDAO;
+import HttpErrors.BadRequest;
+import HttpErrors.HttpError;
+import Utils.JSONBuilder;
+import Utils.ValidationWrapper;
+import filters.Authorize;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import javax.crypto.SecretKey;
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import modelo.Adotante;
+import modelo.Doador;
+import modelo.Endereco;
+import modelo.Instituicao;
+import modelo.Usuario;
+
+@Path(&quot;/auth&quot;)
+<span class="nc" id="L41">public class AuthenticationResource {</span>
+
+<span class="nc" id="L43">    private final SecretKey CHAVE = Keys.hmacShaKeyFor(</span>
+            &quot;7f-j&amp;CKk=coNzZc0y7_4obMP?#TfcYq%fcD0mDpenW2nc!lfGoZ|d?f&amp;RNbDHUX6&quot;
+<span class="nc" id="L45">                    .getBytes(StandardCharsets.UTF_8));</span>
+
+    private @Context
+    HttpServletRequest servletRequest;
+
+    @POST
+    @Path(&quot;login&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response authenticate(@FormParam(&quot;login&quot;) String login, @FormParam(&quot;senha&quot;) String senha) {
+
+<span class="nc" id="L56">        UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+<span class="nc" id="L57">        JSONBuilder responseJson = new JSONBuilder();</span>
+        
+        try {
+
+<span class="nc bnc" id="L61" title="All 4 branches missed.">            if (!ValidationWrapper.isSet(login) || !ValidationWrapper.isSet(senha)) {</span>
+<span class="nc" id="L62">                throw new HttpErrors.BadRequest(&quot;Falta parâmetros&quot;);</span>
+            }
+
+<span class="nc" id="L65">            Usuario usuarioEncontrado = usuarioDAO.findByLogin(login);</span>
+
+<span class="nc bnc" id="L67" title="All 4 branches missed.">            if (usuarioEncontrado != null &amp;&amp; usuarioEncontrado.getSenha().equals(senha)) {</span>
+<span class="nc" id="L68">                String jwtToken = Jwts.builder()</span>
+<span class="nc" id="L69">                        .setSubject(usuarioEncontrado.getLogin())</span>
+<span class="nc" id="L70">                        .setIssuer(&quot;my_app&quot;)</span>
+<span class="nc" id="L71">                        .setIssuedAt(new Date())</span>
+<span class="nc" id="L72">                        .signWith(CHAVE, SignatureAlgorithm.HS256)</span>
+<span class="nc" id="L73">                        .compact();</span>
+
+<span class="nc" id="L75">                responseJson.add(&quot;token&quot;, jwtToken);</span>
+
+<span class="nc" id="L77">                return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L78">                        .entity(</span>
+                                responseJson
+<span class="nc" id="L80">                                        .build()</span>
+<span class="nc" id="L81">                        ).build();</span>
+            } else {
+<span class="nc" id="L83">                throw new HttpErrors.Unauthorized(&quot;Usuário e/ou senha inválidos&quot;);</span>
+            }
+<span class="nc" id="L85">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L86">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L87">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L89">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L90">                                    .build()</span>
+<span class="nc" id="L91">                    ).build();</span>
+<span class="nc" id="L92">        } catch (Exception ex) {</span>
+<span class="nc" id="L93">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L95">            ).entity(ex.getMessage())</span>
+<span class="nc" id="L96">                    .build();</span>
+        }
+    }
+
+    @POST
+    @Path(&quot;register&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response register(
+            @FormParam(&quot;login&quot;) String login,
+            @FormParam(&quot;senha&quot;) String senha,
+            @FormParam(&quot;nome&quot;) String nome,
+            @FormParam(&quot;perfil&quot;) String perfil,
+            // endereco
+            @FormParam(&quot;cidade&quot;) String cidade,
+            @FormParam(&quot;bairro&quot;) String bairro,
+            @FormParam(&quot;estado&quot;) String estado,
+            @FormParam(&quot;rua&quot;) String rua,
+            @FormParam(&quot;numero&quot;) String numero_str, // int
+            @FormParam(&quot;complemento&quot;) String complemento,
+            // pessoa (adotante|doador)
+            @FormParam(&quot;cpf&quot;) String cpf,
+            @FormParam(&quot;dataNascimento&quot;) String dataNascimento_str, // date
+            // instituicao
+            @FormParam(&quot;numAnimais&quot;) String num_animais_str, // int
+            @FormParam(&quot;capacidade&quot;) String capacidade_str, // int
+            @FormParam(&quot;numRegistro&quot;) String num_registro,
+            @FormParam(&quot;certificacoes&quot;) String certificacoes,
+            @FormParam(&quot;razaoSocial&quot;) String razaoSocial,
+            @FormParam(&quot;dataFundacao&quot;) String data_fundacao_str // date
+    ) {
+
+<span class="nc" id="L128">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc" id="L132">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+<span class="nc" id="L133">            Usuario usuarioEncontrado = usuarioDAO.findByLogin(login);</span>
+
+<span class="nc" id="L135">            if (</span>
+<span class="nc bnc" id="L136" title="All 4 branches missed.">                !ValidationWrapper.isSet(login) || !ValidationWrapper.isSet(senha) || </span>
+<span class="nc bnc" id="L137" title="All 4 branches missed.">                !ValidationWrapper.isSet(nome) || !ValidationWrapper.isSet(perfil)</span>
+            ) {
+<span class="nc" id="L139">                throw new HttpErrors.BadRequest(&quot;Parâmetros faltantes ou inválidos&quot;);</span>
+            }
+
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (usuarioEncontrado != null) {</span>
+<span class="nc" id="L143">                throw new HttpErrors.BadRequest(&quot;Usuário já existe&quot;);</span>
+            }
+
+<span class="nc" id="L146">            Usuario novoUsuario = null;</span>
+
+<span class="nc" id="L148">            Integer numero = null;</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (numero_str != null) {</span>
+<span class="nc" id="L150">                numero = ValidationWrapper.parseInt(&quot;numero&quot;, numero_str);</span>
+            }
+
+<span class="nc" id="L153">            Endereco endereco = new Endereco(cidade, bairro, estado, rua, numero, complemento);</span>
+
+<span class="nc bnc" id="L155" title="All 4 branches missed.">            if (perfil.equals(&quot;doador&quot;) || perfil.equals(&quot;adotante&quot;)) {</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">                if (!ValidationWrapper.isSet(cpf)) {</span>
+<span class="nc" id="L158">                    throw new HttpErrors.BadRequest(&quot;Parâmetros faltantes ou inválidos&quot;);</span>
+                }
+
+<span class="nc" id="L161">                Date dataNascimento = ValidationWrapper.parseDate(&quot;dataNascimento&quot;, dataNascimento_str);</span>
+
+<span class="nc bnc" id="L163" title="All 2 branches missed.">                if (perfil.equals(&quot;doador&quot;)) {</span>
+<span class="nc" id="L164">                    DoadorDAO doadorDAO = DoadorDAO.getInstance();</span>
+<span class="nc" id="L165">                    novoUsuario = new Doador(</span>
+                            login, senha, endereco, nome, perfil,
+                            cpf, dataNascimento
+                    );
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">                } else if (perfil.equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L171">                    AdotanteDAO adotanteDAO = AdotanteDAO.getInstance();</span>
+<span class="nc" id="L172">                    novoUsuario = new Adotante(</span>
+                            login, senha, endereco, login, perfil,
+                            cpf, dataNascimento
+                    );
+
+                }
+<span class="nc bnc" id="L178" title="All 2 branches missed.">            } else if (perfil.equals(&quot;instituicao&quot;)) {</span>
+
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                if (!ValidationWrapper.isSet(num_animais_str)</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                        || !ValidationWrapper.isSet(capacidade_str)</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                        || !ValidationWrapper.isSet(data_fundacao_str)</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">                        || !ValidationWrapper.isSet(razaoSocial)</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">                        || !ValidationWrapper.isSet(num_registro)) {</span>
+<span class="nc" id="L185">                    throw new HttpErrors.BadRequest(&quot;Parâmetros faltantes ou inválidos&quot;);</span>
+                }
+
+<span class="nc" id="L188">                Integer num_animais = null;</span>
+<span class="nc" id="L189">                num_animais = ValidationWrapper.parseInt(&quot;numAnimais&quot;, num_animais_str);</span>
+
+<span class="nc" id="L191">                Integer capacidade = null;</span>
+<span class="nc" id="L192">                capacidade = ValidationWrapper.parseInt(&quot;capacidade&quot;, capacidade_str);</span>
+
+<span class="nc" id="L194">                Date data_fundacao = null;</span>
+<span class="nc" id="L195">                data_fundacao = ValidationWrapper.parseDate(&quot;dataFundacao&quot;, data_fundacao_str);</span>
+
+<span class="nc" id="L197">                novoUsuario = new Instituicao(</span>
+                        login, senha, endereco, nome, perfil,
+<span class="nc" id="L199">                        num_animais,</span>
+<span class="nc" id="L200">                        capacidade,</span>
+                        num_registro,
+                        certificacoes,
+                        razaoSocial,
+                        data_fundacao
+                );
+<span class="nc" id="L206">            } else {</span>
+<span class="nc" id="L207">                throw new BadRequest(&quot;Perfil inválido&quot;);</span>
+            }
+
+<span class="nc" id="L210">            usuarioDAO.persist(novoUsuario);</span>
+
+<span class="nc" id="L212">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L213">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L215">                                    .add(&quot;mensagem&quot;, &quot;Cadastro feito com sucesso&quot;)</span>
+<span class="nc" id="L216">                                    .add(&quot;login&quot;, novoUsuario.getLogin())</span>
+<span class="nc" id="L217">                                    .build()</span>
+<span class="nc" id="L218">                    ).build();</span>
+<span class="nc" id="L219">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L220">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L221">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L223">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L224">                                    .build()</span>
+<span class="nc" id="L225">                    ).build();</span>
+<span class="nc" id="L226">        } catch (Exception ex) {</span>
+<span class="nc" id="L227">            System.out.println(ex);</span>
+<span class="nc" id="L228">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L230">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L231">                    .build();</span>
+        }
+
+    }
+
+    @GET
+    @Path(&quot;check&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response check() {
+
+<span class="nc" id="L242">        JSONBuilder json = new JSONBuilder();</span>
+
+<span class="nc" id="L244">        Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc" id="L246">        return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L247">                .entity(</span>
+                        json
+<span class="nc" id="L249">                                .add(&quot;mensagem&quot;, &quot;sucesso&quot;)</span>
+<span class="nc" id="L250">                                .add(&quot;login&quot;, usuario.getLogin())</span>
+<span class="nc" id="L251">                                .add(&quot;id&quot;, usuario.getId())</span>
+<span class="nc" id="L252">                                .build()</span>
+<span class="nc" id="L253">                ).build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

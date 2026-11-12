@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PetDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">DAO</a> &gt; <span class="el_source">PetDAO.java</span></div><h1>PetDAO.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package DAO;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import modelo.Adotante;
+import modelo.FiltroAdotante;
+import modelo.Pet;
+import modelo.Variacao;
+
+/**
+ *
+ * @author Mac
+ */
+public class PetDAO extends JpaDAO&lt;Pet&gt; {
+
+    private static PetDAO instance;
+
+    public static PetDAO getInstance() {
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (instance == null) {</span>
+<span class="nc" id="L28">            instance = new PetDAO();</span>
+        }
+
+<span class="nc" id="L31">        return instance;</span>
+    }
+
+    private PetDAO() {
+<span class="nc" id="L35">        super(Pet.class);</span>
+<span class="nc" id="L36">    }</span>
+
+    public List&lt;Pet&gt; findPetsFor(Adotante adotante) {
+
+<span class="nc" id="L40">        FiltroAdotante filtro = adotante.getFiltro();</span>
+
+<span class="nc" id="L42">        String queryWhere = &quot;&quot;;</span>
+
+<span class="nc" id="L44">        Double alturaMenor = filtro.getAlturaMenor();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (alturaMenor != null) {</span>
+<span class="nc" id="L46">            queryWhere += &quot; AND P.altura&lt;:alturaMenor&quot;;</span>
+        }
+<span class="nc" id="L48">        Double gastoMensalMenor = filtro.getGastoMensalMenor();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (gastoMensalMenor != null) {</span>
+<span class="nc" id="L50">            queryWhere += &quot; AND P.gastoMensal&lt;:gastoMensalMenor&quot;;</span>
+        }
+<span class="nc" id="L52">        Double pesoMenor = filtro.getPesoMenor();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (pesoMenor != null) {</span>
+<span class="nc" id="L54">            queryWhere += &quot; AND P.peso&lt;:pesoMenor&quot;;</span>
+        }
+<span class="nc" id="L56">        String especie = filtro.getEspecie();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (especie != null) {</span>
+<span class="nc" id="L58">            queryWhere += &quot; AND V.especie=:especie&quot;;</span>
+        }
+<span class="nc" id="L60">        String porte = filtro.getPorte();</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (porte != null) {</span>
+<span class="nc" id="L62">            queryWhere += &quot; AND V.porte=:porte&quot;;</span>
+        }
+<span class="nc" id="L64">        String raca = filtro.getRaca();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (raca != null) {</span>
+<span class="nc" id="L66">            queryWhere += &quot; AND V.raca=:raca&quot;;</span>
+        }
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (queryWhere.length() &gt; 0) {</span>
+<span class="nc" id="L70">            queryWhere = &quot;WHERE 1=1 &quot; + queryWhere;</span>
+        }
+
+<span class="nc" id="L73">        TypedQuery&lt;Pet&gt; query = this.entityManager</span>
+<span class="nc" id="L74">                .createQuery(&quot;SELECT P FROM &quot; + this.entity.getName() + &quot; P JOIN P.variacao V &quot; + queryWhere, Pet.class);</span>
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (alturaMenor != null) {</span>
+<span class="nc" id="L77">            query.setParameter(&quot;alturaMenor&quot;, alturaMenor);</span>
+        }
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (gastoMensalMenor != null) {</span>
+<span class="nc" id="L80">            query.setParameter(&quot;gastoMensalMenor&quot;, gastoMensalMenor);</span>
+        }
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (pesoMenor != null) {</span>
+<span class="nc" id="L83">            query.setParameter(&quot;pesoMenor&quot;, pesoMenor);</span>
+        }
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (especie != null) {</span>
+<span class="nc" id="L86">            query.setParameter(&quot;especie&quot;, especie);</span>
+        }
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (porte != null) {</span>
+<span class="nc" id="L89">            query.setParameter(&quot;porte&quot;, porte);</span>
+        }
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (raca != null) {</span>
+<span class="nc" id="L92">            query.setParameter(&quot;raca&quot;, raca);</span>
+        }
+
+<span class="nc" id="L95">        List&lt;Pet&gt; petsEncontrados = query.getResultList();</span>
+
+<span class="nc" id="L97">        return petsEncontrados;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

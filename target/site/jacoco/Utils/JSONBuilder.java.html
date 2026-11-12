@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">Utils</a> &gt; <span class="el_source">JSONBuilder.java</span></div><h1>JSONBuilder.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Utils;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+
+/**
+ *
+ * @author Mac
+ */
+public class JSONBuilder implements JsonObjectBuilder {
+
+    JsonBuilderFactory jsonFactory;
+    JsonObjectBuilder objectBuilder;
+
+<span class="nc" id="L26">    public JSONBuilder() {</span>
+<span class="nc" id="L27">        this.jsonFactory = Json.createBuilderFactory(null);</span>
+<span class="nc" id="L28">        this.objectBuilder = jsonFactory.createObjectBuilder();</span>
+<span class="nc" id="L29">    }</span>
+        
+    @Override
+    public JSONBuilder add(String string, JsonValue jv) {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(jv == null) this.addNull(string);</span>
+<span class="nc" id="L34">        this.objectBuilder.add(string, jv);</span>
+<span class="nc" id="L35">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, String string1) {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if(string1 == null) this.addNull(string);</span>
+<span class="nc" id="L41">        else this.objectBuilder.add(string, string1);</span>
+        
+<span class="nc" id="L43">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, BigInteger bi) {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if(bi == null) this.addNull(string);</span>
+<span class="nc" id="L49">        else this.objectBuilder.add(string, bi);</span>
+<span class="nc" id="L50">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, BigDecimal bd) {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if(bd == null) this.addNull(string);</span>
+<span class="nc" id="L56">        else this.objectBuilder.add(string, bd);</span>
+<span class="nc" id="L57">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, int i) {
+<span class="nc" id="L62">        this.objectBuilder.add(string, i);</span>
+<span class="nc" id="L63">        return this;</span>
+    }
+    public JSONBuilder add(String string, Integer i) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if(i == null) this.addNull(string);</span>
+<span class="nc" id="L67">        else this.objectBuilder.add(string, i);</span>
+<span class="nc" id="L68">        return this;</span>
+    }
+    
+    @Override
+    public JSONBuilder add(String string, long l) {
+<span class="nc" id="L73">        this.objectBuilder.add(string, l);</span>
+<span class="nc" id="L74">        return this;</span>
+    }
+
+    public JSONBuilder add(String string, Long l) {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if(l == null) this.addNull(string);</span>
+<span class="nc" id="L79">        else this.objectBuilder.add(string, l);</span>
+<span class="nc" id="L80">        return this;</span>
+    }
+    
+    @Override
+    public JSONBuilder add(String string, double d) {
+<span class="nc" id="L85">        this.objectBuilder.add(string, d);</span>
+<span class="nc" id="L86">        return this;</span>
+    }
+    public JSONBuilder add(String string, Double d) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if(d == null) this.addNull(string);</span>
+<span class="nc" id="L90">        else this.objectBuilder.add(string, d);</span>
+<span class="nc" id="L91">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, boolean bln) {
+<span class="nc" id="L96">        this.objectBuilder.add(string, bln);</span>
+<span class="nc" id="L97">        return this;</span>
+    }
+    public JSONBuilder add(String string, Boolean bln) {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if(bln == null) this.addNull(string);</span>
+<span class="nc" id="L101">        else this.objectBuilder.add(string, bln);</span>
+<span class="nc" id="L102">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder addNull(String string) {
+<span class="nc" id="L107">        this.objectBuilder.addNull(string);</span>
+<span class="nc" id="L108">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, JsonObjectBuilder job) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if(job == null) this.addNull(string);</span>
+<span class="nc" id="L114">        else this.objectBuilder.add(string, job);</span>
+<span class="nc" id="L115">        return this;</span>
+    }
+
+    @Override
+    public JSONBuilder add(String string, JsonArrayBuilder jab) {
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if(jab == null) this.addNull(string);</span>
+<span class="nc" id="L121">        else this.objectBuilder.add(string, jab);</span>
+<span class="nc" id="L122">        return this;</span>
+    }
+
+    @Override
+    public JsonObject build() {
+<span class="nc" id="L127">        return this.objectBuilder.build();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

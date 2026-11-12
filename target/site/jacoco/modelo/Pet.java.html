@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">Pet.java</span></div><h1>Pet.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package modelo;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+
+/**
+ *
+ * @author Matheus
+ */
+@Entity
+public class Pet implements Serializable, IEntity {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @Column(nullable=false)
+    private String nome;
+    
+    @Column(nullable=true)
+    private Date dataNascimento;
+    
+    @Column(nullable=false)
+    private Double peso;
+    
+    @Column(nullable=false)
+    private Double altura;
+    
+    @Column(nullable=false)
+    private Boolean adotado;
+    
+    @ManyToOne
+    @JoinColumn(name=&quot;id_dono&quot;)
+    private Usuario dono;
+    
+    @ManyToOne
+    @JoinColumn(name=&quot;id_variacao&quot;, nullable = false)
+    private Variacao variacao;
+    
+    @ManyToMany
+    private Set&lt;Adotante&gt; desejadoPor;
+    
+    @Column(nullable=false)
+    private Double gastoMensal;
+    
+    @Column(nullable=true)
+    private String observacoes;
+    
+    @Column(nullable=false)
+    private String fotos;
+
+<span class="nc" id="L69">    public Pet() {}</span>
+
+    public Pet(String nome, 
+            Date dataNasc, 
+            double peso,
+            double altura,
+            Usuario dono,
+            Variacao variacao,
+            double gastoMensal, 
+            String obs,
+<span class="nc" id="L79">            String fotos) {</span>
+<span class="nc" id="L80">        this.nome = nome;</span>
+<span class="nc" id="L81">        this.dataNascimento = dataNasc;</span>
+<span class="nc" id="L82">        this.peso = peso;</span>
+<span class="nc" id="L83">        this.altura = altura;</span>
+<span class="nc" id="L84">        this.dono = dono;</span>
+<span class="nc" id="L85">        this.variacao = variacao;</span>
+<span class="nc" id="L86">        this.gastoMensal = gastoMensal;</span>
+<span class="nc" id="L87">        this.observacoes = obs;</span>
+<span class="nc" id="L88">        this.fotos = fotos;</span>
+<span class="nc" id="L89">        this.adotado = false;</span>
+<span class="nc" id="L90">        this.desejadoPor = new HashSet();</span>
+<span class="nc" id="L91">    }</span>
+
+    public Long getId() {
+<span class="nc" id="L94">        return id;</span>
+    }
+    public void setId(Long id) {
+<span class="nc" id="L97">        this.id = id;</span>
+<span class="nc" id="L98">    }</span>
+
+    public String getNome() {
+<span class="nc" id="L101">        return nome;</span>
+    }
+    public void setNome(String nome) {
+<span class="nc" id="L104">        this.nome = nome;</span>
+<span class="nc" id="L105">    }</span>
+
+    public Date getDataNascimento() {
+<span class="nc" id="L108">        return dataNascimento;</span>
+    }
+    public void setDataNascimento(Date dataNascimento) {
+<span class="nc" id="L111">        this.dataNascimento = dataNascimento;</span>
+<span class="nc" id="L112">    }</span>
+
+    public Double getPeso() {
+<span class="nc" id="L115">        return peso;</span>
+    }
+    public void setPeso(Double peso) {
+<span class="nc" id="L118">        this.peso = peso;</span>
+<span class="nc" id="L119">    }</span>
+
+    public Double getAltura() {
+<span class="nc" id="L122">        return altura;</span>
+    }
+    public void setAltura(Double altura) {
+<span class="nc" id="L125">        this.altura = altura;</span>
+<span class="nc" id="L126">    }</span>
+
+    public Boolean getAdotado() {
+<span class="nc" id="L129">        return adotado;</span>
+    }
+    public void setAdotado(Boolean adotado) {
+<span class="nc" id="L132">        this.adotado = adotado;</span>
+<span class="nc" id="L133">    }</span>
+
+    public Usuario getDono() {
+<span class="nc" id="L136">        return dono;</span>
+    }
+    public void setDono(Usuario dono) {
+<span class="nc" id="L139">        this.dono = dono;</span>
+<span class="nc" id="L140">    }</span>
+
+    public Variacao getVariacao() {
+<span class="nc" id="L143">        return variacao;</span>
+    }
+    public void setVariacao(Variacao variacao) {
+<span class="nc" id="L146">        this.variacao = variacao;</span>
+<span class="nc" id="L147">    }</span>
+
+    public Set&lt;Adotante&gt; getDesejadoPor() {
+<span class="nc" id="L150">        return desejadoPor;</span>
+    }
+    public void setDesejadoPor(Set&lt;Adotante&gt; desejadoPor) {
+<span class="nc" id="L153">        this.desejadoPor = desejadoPor;</span>
+<span class="nc" id="L154">    }</span>
+
+    public Double getGastoMensal() {
+<span class="nc" id="L157">        return gastoMensal;</span>
+    }
+    public void setGastoMensal(Double gastoMensal) {
+<span class="nc" id="L160">        this.gastoMensal = gastoMensal;</span>
+<span class="nc" id="L161">    }</span>
+
+    public String getObservacoes() {
+<span class="nc" id="L164">        return observacoes;</span>
+    }
+    public void setObservacoes(String observacoes) {
+<span class="nc" id="L167">        this.observacoes = observacoes;</span>
+<span class="nc" id="L168">    }</span>
+
+    public String getFotos() {
+<span class="nc" id="L171">        return fotos;</span>
+    }
+    public void setFotos(String fotos) {
+<span class="nc" id="L174">        this.fotos = fotos;</span>
+<span class="nc" id="L175">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L179">        int hash = 0;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L181">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (!(object instanceof Pet)) {</span>
+<span class="nc" id="L188">            return false;</span>
+        }
+<span class="nc" id="L190">        Pet other = (Pet) object;</span>
+<span class="nc bnc" id="L191" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.id != null) || (this.id != null &amp;&amp; !this.id.equals(other.id))) {</span>
+<span class="nc" id="L192">            return false;</span>
+        }
+<span class="nc" id="L194">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L199">        return &quot;modelo.Pet[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
