@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pets.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">com.trabappcorp.Adopet</a> &gt; <span class="el_source">Pets.java</span></div><h1>Pets.java</h1><pre class="source lang-java linenums">package com.trabappcorp.Adopet;
+
+import DAO.PetDAO;
+import DAO.UsuarioDAO;
+import DAO.VariacaoDAO;
+import Utils.JSONArrayBuilder;
+import Utils.JSONBuilder;
+import Utils.ValidationWrapper;
+import filters.Authorize;
+import filters.UserParam;
+import java.text.SimpleDateFormat;
+import modelo.Pet;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import modelo.Adotante;
+import modelo.Usuario;
+import modelo.Variacao;
+
+@Path(&quot;/pets&quot;)
+<span class="nc" id="L38">public class Pets {</span>
+
+    private @Context
+    HttpServletRequest servletRequest;
+
+    @GET
+    @Path(&quot;/variacoes&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVariacoes() {
+
+<span class="nc" id="L49">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc" id="L53">            JSONArrayBuilder variacoesJson = new JSONArrayBuilder();</span>
+
+<span class="nc" id="L55">            VariacaoDAO variacaoDAO = VariacaoDAO.getInstance();</span>
+
+<span class="nc" id="L57">            List&lt;Variacao&gt; variacoes = variacaoDAO.getAllVariacoes();</span>
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            for (Variacao variacao : variacoes) {</span>
+<span class="nc" id="L60">                JSONBuilder variacaoJson = new JSONBuilder();</span>
+<span class="nc" id="L61">                variacaoJson</span>
+<span class="nc" id="L62">                        .add(&quot;id&quot;, variacao.getId())</span>
+<span class="nc" id="L63">                        .add(&quot;raca&quot;, variacao.getRaca())</span>
+<span class="nc" id="L64">                        .add(&quot;porte&quot;, variacao.getPorte())</span>
+<span class="nc" id="L65">                        .add(&quot;especie&quot;, variacao.getEspecie());</span>
+
+<span class="nc" id="L67">                variacoesJson.add(variacaoJson);</span>
+<span class="nc" id="L68">            }</span>
+
+<span class="nc" id="L70">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L71">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L73">                                    .add(&quot;variacoes&quot;, variacoesJson)</span>
+<span class="nc" id="L74">                                    .build()</span>
+<span class="nc" id="L75">                    ).build();</span>
+
+<span class="nc" id="L77">        } catch (Exception ex) {</span>
+<span class="nc" id="L78">            System.out.println(ex);</span>
+<span class="nc" id="L79">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L81">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L82">                    .build();</span>
+        }
+    }
+
+    @POST
+    @Path(&quot;/variacoes&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response createVariacao(
+            @FormParam(&quot;raca&quot;) String raca,
+            @FormParam(&quot;porte&quot;) String porte,
+            @FormParam(&quot;especie&quot;) String especie
+    ) {
+<span class="nc" id="L96">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc" id="L100">            Variacao novaVariacao = new Variacao();</span>
+
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (ValidationWrapper.isSet(raca)) {</span>
+<span class="nc" id="L103">                novaVariacao.setRaca(raca);</span>
+            } else {
+<span class="nc" id="L105">                throw new HttpErrors.BadRequest(&quot;Parametros faltantes ou inválidos&quot;);</span>
+            }
+
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (ValidationWrapper.isSet(especie)) {</span>
+<span class="nc" id="L109">                novaVariacao.setEspecie(especie);</span>
+            } else {
+<span class="nc" id="L111">                throw new HttpErrors.BadRequest(&quot;Parametros faltantes ou inválidos&quot;);</span>
+            }
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (ValidationWrapper.isSet(porte)) {</span>
+<span class="nc" id="L115">                novaVariacao.setPorte(porte);</span>
+            } else {
+<span class="nc" id="L117">                throw new HttpErrors.BadRequest(&quot;Parametros faltantes ou inválidos&quot;);</span>
+            }
+
+<span class="nc" id="L120">            VariacaoDAO variacaoDAO = VariacaoDAO.getInstance();</span>
+<span class="nc" id="L121">            Variacao variacaoExists = variacaoDAO.findExistingVariacao(porte, especie, raca);</span>
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            if (variacaoExists != null) {</span>
+<span class="nc" id="L124">                throw new HttpErrors.BadRequest(&quot;Variacao identica já existe&quot;);</span>
+            }
+
+<span class="nc" id="L127">            Variacao variacao = new Variacao(raca, porte, especie);</span>
+
+<span class="nc" id="L129">            variacaoDAO.persist(variacao);</span>
+
+<span class="nc" id="L131">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L132">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L134">                                    .add(&quot;mensagem&quot;, &quot;Variação cadastrada com sucesso&quot;)</span>
+<span class="nc" id="L135">                                    .build()</span>
+<span class="nc" id="L136">                    ).build();</span>
+<span class="nc" id="L137">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L138">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L139">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L141">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L142">                                    .build()</span>
+<span class="nc" id="L143">                    ).build();</span>
+<span class="nc" id="L144">        } catch (Exception ex) {</span>
+<span class="nc" id="L145">            System.out.println(ex);</span>
+<span class="nc" id="L146">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L148">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L149">                    .build();</span>
+        }
+
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Authorize
+    public Response registerPet(
+            @FormParam(&quot;nome&quot;) String nome,
+            @FormParam(&quot;dataNascimento&quot;) String dataNascimento_str,
+            @FormParam(&quot;peso&quot;) String peso_str,
+            @FormParam(&quot;altura&quot;) String altura_str,
+            @FormParam(&quot;gastoMensal&quot;) String gastoMensal_str,
+            @FormParam(&quot;obs&quot;) String obs,
+            @FormParam(&quot;idVariacao&quot;) String idVariacao_str,
+            @FormParam(&quot;fotos&quot;) String fotos) {
+
+<span class="nc" id="L168">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc bnc" id="L172" title="All 6 branches missed.">            if (!ValidationWrapper.isSet(nome) || !ValidationWrapper.isSet(dataNascimento_str) || !ValidationWrapper.isSet(peso_str)</span>
+<span class="nc bnc" id="L173" title="All 4 branches missed.">                    || !ValidationWrapper.isSet(altura_str) || !ValidationWrapper.isSet(gastoMensal_str)</span>
+<span class="nc bnc" id="L174" title="All 4 branches missed.">                    || !ValidationWrapper.isSet(idVariacao_str) || !ValidationWrapper.isSet(fotos)) {</span>
+<span class="nc" id="L175">                throw new HttpErrors.BadRequest(&quot;Faltam parâmetros&quot;);</span>
+            }
+
+<span class="nc" id="L178">            Date dataNascimento = ValidationWrapper.parseDate(&quot;dataNascimento&quot;, dataNascimento_str);</span>
+<span class="nc" id="L179">            double peso = ValidationWrapper.parseDouble(&quot;peso&quot;, peso_str);</span>
+<span class="nc" id="L180">            double altura = ValidationWrapper.parseDouble(&quot;altura&quot;, altura_str);</span>
+<span class="nc" id="L181">            double gastoMensal = ValidationWrapper.parseDouble(&quot;gastoMensal&quot;, gastoMensal_str);</span>
+<span class="nc" id="L182">            long idVariacao = ValidationWrapper.parseLongId(&quot;idVariacao&quot;, idVariacao_str);</span>
+
+<span class="nc" id="L184">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L186" title="All 4 branches missed.">            if (!usuario.getPerfil().equals(&quot;instituicao&quot;) &amp;&amp; !usuario.getPerfil().equals(&quot;doador&quot;)) {</span>
+<span class="nc" id="L187">                throw new HttpErrors.BadRequest(&quot;Usuário autenticado não é um doador ou instituição&quot;);</span>
+            }
+
+<span class="nc" id="L190">            VariacaoDAO variacaoDAO = VariacaoDAO.getInstance();</span>
+
+<span class="nc" id="L192">            Variacao variacao = variacaoDAO.getById(idVariacao);</span>
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            if (variacao == null) {</span>
+<span class="nc" id="L195">                throw new HttpErrors.NotFound(&quot;A variação não foi encontrada&quot;);</span>
+            }
+
+<span class="nc" id="L198">            PetDAO petDAO = PetDAO.getInstance();</span>
+<span class="nc" id="L199">            Pet novoPet = new Pet(nome, dataNascimento, peso, altura, usuario, variacao, gastoMensal, obs, fotos);</span>
+<span class="nc" id="L200">            petDAO.persist(novoPet);</span>
+
+<span class="nc" id="L202">            usuario.getPetsCadastrados().add(novoPet);</span>
+<span class="nc" id="L203">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+<span class="nc" id="L204">            usuarioDAO.persist(usuario);</span>
+
+<span class="nc" id="L206">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L207">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L209">                                    .add(&quot;mensagem&quot;, &quot;Cadastro de Pet realizado com sucesso&quot;)</span>
+<span class="nc" id="L210">                                    .add(&quot;id&quot;, novoPet.getId())</span>
+<span class="nc" id="L211">                                    .build()</span>
+<span class="nc" id="L212">                    ).build();</span>
+
+<span class="nc" id="L214">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L215">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L216">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L218">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L219">                                    .build()</span>
+<span class="nc" id="L220">                    ).build();</span>
+<span class="nc" id="L221">        } catch (Exception ex) {</span>
+<span class="nc" id="L222">            System.out.println(ex);</span>
+<span class="nc" id="L223">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L225">            ).entity(responseJson.add(&quot;message&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L226">                    .build();</span>
+        }
+
+    }
+
+    @POST
+    @Path(&quot;/{idPet}&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Authorize
+    public Response updatePet(
+            @PathParam(&quot;idPet&quot;) String idPet_str,
+            @FormParam(&quot;nome&quot;) String nome,
+            @FormParam(&quot;dataNascimento&quot;) String dataNascimento_str,
+            @FormParam(&quot;peso&quot;) String peso_str,
+            @FormParam(&quot;altura&quot;) String altura_str,
+            @FormParam(&quot;gastoMensal&quot;) String gastoMensal_str,
+            @FormParam(&quot;obs&quot;) String obs,
+            @FormParam(&quot;idVariacao&quot;) String idVariacao_str,
+            @FormParam(&quot;fotos&quot;) String fotos,
+            @FormParam(&quot;adotado&quot;) String adotado_str) {
+
+<span class="nc" id="L248">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            if (!ValidationWrapper.isSet(nome)</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(dataNascimento_str)</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(peso_str)</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(altura_str)</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(gastoMensal_str)</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(idVariacao_str)</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(obs)</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(fotos)</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                    &amp;&amp; !ValidationWrapper.isSet(adotado_str)) {</span>
+<span class="nc" id="L261">                throw new HttpErrors.BadRequest(&quot;Faltam parâmetros&quot;);</span>
+            }
+
+<span class="nc" id="L264">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc" id="L266">            PetDAO petDAO = PetDAO.getInstance();</span>
+
+<span class="nc" id="L268">            Long idPet = ValidationWrapper.parseLongId(&quot;idPet&quot;, idPet_str);</span>
+
+<span class="nc" id="L270">            Pet pet = petDAO.getById(idPet);</span>
+
+<span class="nc bnc" id="L272" title="All 2 branches missed.">            if(pet == null) throw new HttpErrors.NotFound(&quot;Pet não encontrado&quot;);</span>
+            
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            if (!pet.getDono().getId().equals(usuario.getId())) {</span>
+<span class="nc" id="L275">                throw new HttpErrors.Unauthorized(&quot;Você não tem permissão para alterar este Pet&quot;);</span>
+            }
+
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (ValidationWrapper.isSet(nome)) {</span>
+<span class="nc" id="L279">                pet.setNome(nome);</span>
+            }
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if (ValidationWrapper.isSet(obs)) {</span>
+<span class="nc" id="L282">                pet.setObservacoes(obs);</span>
+            }
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            if (ValidationWrapper.isSet(fotos)) {</span>
+<span class="nc" id="L285">                pet.setFotos(fotos);</span>
+            }
+
+<span class="nc bnc" id="L288" title="All 2 branches missed.">            if (ValidationWrapper.isSet(dataNascimento_str)) {</span>
+<span class="nc" id="L289">                Date dataNascimento = ValidationWrapper.parseDate(&quot;dataNascimento&quot;, dataNascimento_str);</span>
+<span class="nc" id="L290">                pet.setDataNascimento(dataNascimento);</span>
+            }
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (ValidationWrapper.isSet(peso_str)) {</span>
+<span class="nc" id="L293">                double peso = ValidationWrapper.parseDouble(&quot;peso&quot;, peso_str);</span>
+<span class="nc" id="L294">                pet.setPeso(peso);</span>
+            }
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            if (ValidationWrapper.isSet(altura_str)) {</span>
+<span class="nc" id="L297">                double altura = ValidationWrapper.parseDouble(&quot;altura&quot;, altura_str);</span>
+<span class="nc" id="L298">                pet.setAltura(altura);</span>
+            }
+<span class="nc bnc" id="L300" title="All 2 branches missed.">            if (ValidationWrapper.isSet(gastoMensal_str)) {</span>
+<span class="nc" id="L301">                double gastoMensal = ValidationWrapper.parseDouble(&quot;gastoMensal&quot;, gastoMensal_str);</span>
+<span class="nc" id="L302">                pet.setGastoMensal(gastoMensal);</span>
+            }
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            if (ValidationWrapper.isSet(adotado_str)) {</span>
+<span class="nc" id="L305">                boolean adotado = ValidationWrapper.parseBoolean(&quot;adotado&quot;, adotado_str);</span>
+<span class="nc" id="L306">                pet.setAdotado(adotado);</span>
+            }
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            if (ValidationWrapper.isSet(idVariacao_str)) {</span>
+<span class="nc" id="L309">                long idVariacao = ValidationWrapper.parseLongId(&quot;idVariacao&quot;, idVariacao_str);</span>
+<span class="nc" id="L310">                VariacaoDAO variacaoDAO = VariacaoDAO.getInstance();</span>
+<span class="nc" id="L311">                Variacao variacao = variacaoDAO.getById(idVariacao);</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                if (variacao == null) {</span>
+<span class="nc" id="L313">                    throw new HttpErrors.NotFound(&quot;A Variação não foi encontrada&quot;);</span>
+                }
+
+<span class="nc" id="L316">                pet.setVariacao(variacao);</span>
+            }
+
+<span class="nc" id="L319">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+
+<span class="nc" id="L321">            petDAO.persist(pet);</span>
+<span class="nc" id="L322">            usuarioDAO.refresh(usuario);</span>
+
+<span class="nc" id="L324">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L325">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L327">                                    .add(&quot;mensagem&quot;, &quot;Pet atualizado com sucesso&quot;)</span>
+<span class="nc" id="L328">                                    .build()</span>
+<span class="nc" id="L329">                    ).build();</span>
+
+<span class="nc" id="L331">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L332">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L333">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L335">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L336">                                    .build()</span>
+<span class="nc" id="L337">                    ).build();</span>
+<span class="nc" id="L338">        } catch (Exception ex) {</span>
+<span class="nc" id="L339">            System.out.println(ex);</span>
+<span class="nc" id="L340">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L342">            ).entity(responseJson.add(&quot;message&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L343">                    .build();</span>
+        }
+
+    }
+
+    @GET
+    @Path(&quot;/cadastrados&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRegisteredPets() {
+
+<span class="nc" id="L354">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L357">            JSONArrayBuilder petsJson = new JSONArrayBuilder();</span>
+
+<span class="nc" id="L359">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+<span class="nc" id="L360">            List&lt;Pet&gt; pets = usuario.getPetsCadastrados();</span>
+
+<span class="nc bnc" id="L362" title="All 2 branches missed.">            for (Pet pet : pets) {</span>
+<span class="nc" id="L363">                JSONBuilder petJson = new JSONBuilder();</span>
+<span class="nc" id="L364">                petJson</span>
+<span class="nc" id="L365">                        .add(&quot;id&quot;, pet.getId())</span>
+<span class="nc" id="L366">                        .add(&quot;adotado&quot;, pet.getAdotado())</span>
+<span class="nc" id="L367">                        .add(&quot;altura&quot;, pet.getAltura())</span>
+<span class="nc" id="L368">                        .add(&quot;fotos&quot;, pet.getFotos())</span>
+<span class="nc" id="L369">                        .add(&quot;gastoMensal&quot;, pet.getGastoMensal())</span>
+<span class="nc" id="L370">                        .add(&quot;nome&quot;, pet.getNome())</span>
+<span class="nc" id="L371">                        .add(&quot;observacoes&quot;, pet.getObservacoes())</span>
+<span class="nc" id="L372">                        .add(&quot;peso&quot;, pet.getPeso())</span>
+<span class="nc" id="L373">                        .add(&quot;dataNascimento&quot;, pet.getDataNascimento().toString())</span>
+<span class="nc" id="L374">                        .add(&quot;variacao&quot;, pet.getVariacao().getId());</span>
+
+<span class="nc" id="L376">                petsJson.add(petJson);</span>
+<span class="nc" id="L377">            }</span>
+
+<span class="nc" id="L379">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L380">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L382">                                    .add(&quot;pets&quot;, petsJson)</span>
+<span class="nc" id="L383">                                    .build()</span>
+<span class="nc" id="L384">                    ).build();</span>
+
+<span class="nc" id="L386">        } catch (Exception ex) {</span>
+<span class="nc" id="L387">            System.out.println(ex);</span>
+<span class="nc" id="L388">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L390">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L391">                    .build();</span>
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(&quot;/{idPet}/desejo&quot;)
+    @Authorize
+    public Response wishPet(
+            @PathParam(&quot;idPet&quot;) String idPet_str
+    ) {
+
+<span class="nc" id="L403">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L406">            long idPet = ValidationWrapper.parseLongId(&quot;idPet&quot;, idPet_str);</span>
+
+<span class="nc" id="L408">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L410" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L411">                throw new HttpErrors.BadRequest(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L414">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L416">            PetDAO petDAO = PetDAO.getInstance();</span>
+
+<span class="nc" id="L418">            Pet pet = petDAO.getById(idPet);</span>
+
+<span class="nc bnc" id="L420" title="All 2 branches missed.">            if (pet == null) {</span>
+<span class="nc" id="L421">                throw new HttpErrors.NotFound(&quot;O Pet não foi encontrado&quot;);</span>
+            }
+
+<span class="nc" id="L424">            adotante.getPetsDesejados().add(pet);</span>
+<span class="nc" id="L425">            pet.getDesejadoPor().add(adotante);</span>
+
+<span class="nc" id="L427">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+
+<span class="nc" id="L429">            petDAO.persist(pet);</span>
+<span class="nc" id="L430">            usuarioDAO.persist(usuario);</span>
+
+<span class="nc" id="L432">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L433">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L435">                                    .add(&quot;mensagem&quot;, &quot;Pet foi marcado como desejado com sucesso&quot;)</span>
+<span class="nc" id="L436">                                    .build()</span>
+<span class="nc" id="L437">                    ).build();</span>
+
+<span class="nc" id="L439">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L440">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L441">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L443">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L444">                                    .build()</span>
+<span class="nc" id="L445">                    ).build();</span>
+<span class="nc" id="L446">        } catch (Exception ex) {</span>
+<span class="nc" id="L447">            System.out.println(ex);</span>
+<span class="nc" id="L448">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L450">            ).entity(responseJson.add(&quot;message&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L451">                    .build();</span>
+        }
+
+    }
+
+    @GET
+    @Path(&quot;/desejados&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWishedPets() {
+
+<span class="nc" id="L462">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L465">            JSONArrayBuilder petsJson = new JSONArrayBuilder();</span>
+
+<span class="nc" id="L467">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L469" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L470">                throw new HttpErrors.BadRequest(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L473">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L475">            Set&lt;Pet&gt; pets = adotante.getPetsDesejados();</span>
+
+<span class="nc bnc" id="L477" title="All 2 branches missed.">            for (Pet pet : pets) {</span>
+<span class="nc" id="L478">                JSONBuilder petJson = new JSONBuilder();</span>
+<span class="nc" id="L479">                petJson</span>
+<span class="nc" id="L480">                        .add(&quot;id&quot;, pet.getId())</span>
+<span class="nc" id="L481">                        .add(&quot;adotado&quot;, pet.getAdotado())</span>
+<span class="nc" id="L482">                        .add(&quot;altura&quot;, pet.getAltura())</span>
+<span class="nc" id="L483">                        .add(&quot;fotos&quot;, pet.getFotos())</span>
+<span class="nc" id="L484">                        .add(&quot;gastoMensal&quot;, pet.getGastoMensal())</span>
+<span class="nc" id="L485">                        .add(&quot;nome&quot;, pet.getNome())</span>
+<span class="nc" id="L486">                        .add(&quot;observacoes&quot;, pet.getObservacoes())</span>
+<span class="nc" id="L487">                        .add(&quot;peso&quot;, pet.getPeso())</span>
+<span class="nc" id="L488">                        .add(&quot;dataNascimento&quot;, pet.getDataNascimento().toString())</span>
+<span class="nc" id="L489">                        .add(&quot;variacao&quot;, pet.getVariacao().getId());</span>
+
+<span class="nc" id="L491">                petsJson.add(petJson);</span>
+<span class="nc" id="L492">            }</span>
+
+<span class="nc" id="L494">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L495">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L497">                                    .add(&quot;pets&quot;, petsJson)</span>
+<span class="nc" id="L498">                                    .build()</span>
+<span class="nc" id="L499">                    ).build();</span>
+
+<span class="nc" id="L501">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L502">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L503">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L505">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L506">                                    .build()</span>
+<span class="nc" id="L507">                    ).build();</span>
+<span class="nc" id="L508">        } catch (Exception ex) {</span>
+<span class="nc" id="L509">            System.out.println(ex);</span>
+<span class="nc" id="L510">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L512">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L513">                    .build();</span>
+        }
+    }
+
+    @DELETE
+    @Path(&quot;/{idPet}/desejo&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeWish(@PathParam(&quot;idPet&quot;) String idPet_str) {
+
+<span class="nc" id="L523">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L526">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L528" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L529">                throw new HttpErrors.BadRequest(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L532">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L534">            long idPet = ValidationWrapper.parseLongId(&quot;idPet&quot;, idPet_str);</span>
+
+<span class="nc" id="L536">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+<span class="nc" id="L537">            PetDAO petDAO = PetDAO.getInstance();</span>
+<span class="nc" id="L538">            Pet pet = petDAO.getById(idPet);</span>
+
+<span class="nc bnc" id="L540" title="All 2 branches missed.">            if (pet == null) {</span>
+<span class="nc" id="L541">                throw new HttpErrors.NotFound(&quot;O Pet não foi encontrado&quot;);</span>
+            }
+
+<span class="nc" id="L544">            adotante.getPetsDesejados().remove(pet);</span>
+<span class="nc" id="L545">            pet.getDesejadoPor().remove(adotante);</span>
+
+<span class="nc" id="L547">            petDAO.persist(pet);</span>
+<span class="nc" id="L548">            usuarioDAO.persist(usuario);</span>
+
+<span class="nc" id="L550">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L551">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L553">                                    .add(&quot;mensagem&quot;, &quot;Desejo removido com sucesso&quot;)</span>
+<span class="nc" id="L554">                                    .build()</span>
+<span class="nc" id="L555">                    ).build();</span>
+
+<span class="nc" id="L557">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L558">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L559">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L561">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L562">                                    .build()</span>
+<span class="nc" id="L563">                    ).build();</span>
+<span class="nc" id="L564">        } catch (Exception ex) {</span>
+<span class="nc" id="L565">            System.out.println(ex);</span>
+<span class="nc" id="L566">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L568">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L569">                    .build();</span>
+        }
+    }
+
+    @DELETE
+    @Path(&quot;/{idPet}&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removePet(@PathParam(&quot;idPet&quot;) String idPet_str) {
+
+<span class="nc" id="L579">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L582">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc" id="L584">            long idPet = ValidationWrapper.parseLongId(&quot;idPet&quot;, idPet_str);</span>
+
+<span class="nc" id="L586">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+<span class="nc" id="L587">            PetDAO petDAO = PetDAO.getInstance();</span>
+<span class="nc" id="L588">            Pet pet = petDAO.getById(idPet);</span>
+
+<span class="nc bnc" id="L590" title="All 2 branches missed.">            if (pet == null) {</span>
+<span class="nc" id="L591">                throw new HttpErrors.NotFound(&quot;O Pet não foi encontrado&quot;);</span>
+            }
+
+<span class="nc bnc" id="L594" title="All 2 branches missed.">            if (!pet.getDono().getId().equals(usuario.getId())) {</span>
+<span class="nc" id="L595">                throw new HttpErrors.BadRequest(&quot;Você não tem permissão para remover este Pet&quot;);</span>
+            }
+
+<span class="nc" id="L598">            petDAO.remove(pet);</span>
+<span class="nc" id="L599">            usuarioDAO.refresh(usuario);</span>
+
+<span class="nc" id="L601">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L602">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L604">                                    .add(&quot;mensagem&quot;, &quot;Pet removido com sucesso&quot;)</span>
+<span class="nc" id="L605">                                    .build()</span>
+<span class="nc" id="L606">                    ).build();</span>
+
+<span class="nc" id="L608">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L609">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L610">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L612">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L613">                                    .build()</span>
+<span class="nc" id="L614">                    ).build();</span>
+<span class="nc" id="L615">        } catch (Exception ex) {</span>
+<span class="nc" id="L616">            System.out.println(ex);</span>
+<span class="nc" id="L617">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L619">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L620">                    .build();</span>
+        }
+    }
+
+    @GET
+    @Path(&quot;/encontrar&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findPets() {
+
+<span class="nc" id="L630">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+<span class="nc" id="L633">            JSONArrayBuilder petsJson = new JSONArrayBuilder();</span>
+
+<span class="nc" id="L635">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L637" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L638">                throw new HttpErrors.BadRequest(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L641">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L643">            List&lt;Pet&gt; pets = PetDAO.getInstance().findPetsFor(adotante);</span>
+
+<span class="nc bnc" id="L645" title="All 2 branches missed.">            for (Pet pet : pets) {</span>
+<span class="nc" id="L646">                JSONBuilder petJson = new JSONBuilder();</span>
+<span class="nc" id="L647">                petJson</span>
+<span class="nc" id="L648">                        .add(&quot;id&quot;, pet.getId())</span>
+<span class="nc" id="L649">                        .add(&quot;adotado&quot;, pet.getAdotado())</span>
+<span class="nc" id="L650">                        .add(&quot;altura&quot;, pet.getAltura())</span>
+<span class="nc" id="L651">                        .add(&quot;fotos&quot;, pet.getFotos())</span>
+<span class="nc" id="L652">                        .add(&quot;gastoMensal&quot;, pet.getGastoMensal())</span>
+<span class="nc" id="L653">                        .add(&quot;nome&quot;, pet.getNome())</span>
+<span class="nc" id="L654">                        .add(&quot;observacoes&quot;, pet.getObservacoes())</span>
+<span class="nc" id="L655">                        .add(&quot;peso&quot;, pet.getPeso())</span>
+<span class="nc" id="L656">                        .add(&quot;dataNascimento&quot;, pet.getDataNascimento().toString())</span>
+<span class="nc" id="L657">                        .add(&quot;variacao&quot;, pet.getVariacao().getId());</span>
+
+<span class="nc" id="L659">                petsJson.add(petJson);</span>
+<span class="nc" id="L660">            }</span>
+
+<span class="nc" id="L662">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L663">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L665">                                    .add(&quot;pets&quot;, petsJson)</span>
+<span class="nc" id="L666">                                    .build()</span>
+<span class="nc" id="L667">                    ).build();</span>
+
+<span class="nc" id="L669">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L670">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L671">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L673">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L674">                                    .build()</span>
+<span class="nc" id="L675">                    ).build();</span>
+<span class="nc" id="L676">        } catch (Exception ex) {</span>
+<span class="nc" id="L677">            System.out.println(ex);</span>
+<span class="nc" id="L678">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L680">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L681">                    .build();</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

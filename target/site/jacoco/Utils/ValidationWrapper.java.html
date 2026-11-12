@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidationWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">Utils</a> &gt; <span class="el_source">ValidationWrapper.java</span></div><h1>ValidationWrapper.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Utils;
+
+import HttpErrors.BadRequest;
+import java.time.Instant;
+import java.util.Date;
+
+/**
+ *
+ * @author Mac
+ */
+<span class="nc" id="L16">public class ValidationWrapper {</span>
+
+    public static boolean parseBoolean(String fieldName, String value_str) throws BadRequest {
+        try {
+<span class="nc" id="L20">            boolean value = Boolean.parseBoolean(value_str);</span>
+<span class="nc" id="L21">            return value;</span>
+<span class="nc" id="L22">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L23">            throw new BadRequest(&quot;O campo &quot; + fieldName + &quot; não é um boolean válido&quot;);</span>
+        }
+    }
+    
+    
+    public static long parseLongId(String fieldName, String value_str) throws BadRequest {
+        try {
+<span class="nc" id="L30">            long value = Long.parseLong(value_str);</span>
+<span class="nc" id="L31">            return value;</span>
+<span class="nc" id="L32">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L33">            throw new BadRequest(&quot;O campo &quot; + fieldName + &quot; não é um id válido&quot;);</span>
+        }
+    }
+    
+    public static double parseDouble(String fieldName, String value_str) throws BadRequest {
+        try {
+<span class="nc" id="L39">            double value = Double.parseDouble(value_str);</span>
+<span class="nc" id="L40">            return value;</span>
+<span class="nc" id="L41">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L42">            throw new BadRequest(&quot;O campo &quot; + fieldName + &quot; não é um número válido&quot;);</span>
+        }
+    }
+
+    
+    public static int parseInt(String fieldName, String value_str) throws BadRequest {
+        try {
+<span class="nc" id="L49">            int value = Integer.parseInt(value_str);</span>
+<span class="nc" id="L50">            return value;</span>
+<span class="nc" id="L51">        } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L52">            throw new BadRequest(&quot;O campo &quot; + fieldName + &quot; não é um inteiro válido&quot;);</span>
+        }
+    }
+
+    public static Date parseDate(String fieldName, String value_str) throws BadRequest {
+        try {
+<span class="nc" id="L58">            Date value = null;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            if (value_str.length() &gt; 0) {</span>
+<span class="nc" id="L60">                value = Date.from(Instant.parse(value_str));</span>
+            }
+<span class="nc" id="L62">            return value;</span>
+<span class="nc" id="L63">        } catch (Exception e) {</span>
+<span class="nc" id="L64">            throw new HttpErrors.BadRequest(&quot;O campo &quot; + fieldName + &quot; não é uma data válida&quot;);</span>
+        }
+    }
+    
+    public static boolean isSet(String o) {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if(o == null) return false;</span>
+        
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if(o instanceof String) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            return ((String) o).length() &gt; 0;</span>
+        }
+        
+<span class="nc" id="L75">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

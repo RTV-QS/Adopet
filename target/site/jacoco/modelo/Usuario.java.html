@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Usuario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">Usuario.java</span></div><h1>Usuario.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package modelo;
+
+/**
+ *
+ * @author Mac
+ */
+import DAO.ContatoDAO;
+import HttpErrors.BadRequest;
+import HttpErrors.HttpError;
+import HttpErrors.NotFound;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = &quot;usuarios&quot;)
+public abstract class Usuario implements Serializable, IEntity {
+
+    protected Long id;
+
+    private String login;
+    private String senha;
+    private Endereco endereco;
+
+<span class="nc" id="L34">    private List&lt;Contato&gt; contatos = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L35">    private List&lt;Pet&gt; petsCadastrados = new ArrayList&lt;&gt;();</span>
+
+    private String nome;
+    private String perfil;    
+
+<span class="nc" id="L40">    public Usuario() {</span>
+<span class="nc" id="L41">    }</span>
+
+    public Usuario(
+            String login,
+            String senha,
+            Endereco endereco,
+            String nome,
+            String perfil
+<span class="nc" id="L49">    ) {</span>
+<span class="nc" id="L50">        this.login = login;</span>
+<span class="nc" id="L51">        this.senha = senha;</span>
+<span class="nc" id="L52">        this.endereco = endereco;</span>
+<span class="nc" id="L53">        this.nome = nome;</span>
+<span class="nc" id="L54">        this.perfil = perfil;</span>
+<span class="nc" id="L55">    }</span>
+
+    @Id
+    @GeneratedValue
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L65">        this.id = id;</span>
+<span class="nc" id="L66">    }</span>
+
+    @Column(nullable = false, unique = true)
+    public String getLogin() {
+<span class="nc" id="L70">        return login;</span>
+    }
+
+    public void setLogin(String login) {
+<span class="nc" id="L74">        this.login = login;</span>
+<span class="nc" id="L75">    }</span>
+
+    @Column(nullable = false)
+    public String getSenha() {
+<span class="nc" id="L79">        return senha;</span>
+    }
+
+    public void setSenha(String senha) {
+<span class="nc" id="L83">        this.senha = senha;</span>
+<span class="nc" id="L84">    }</span>
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = &quot;id_endereco&quot;, nullable = false)
+    public Endereco getEndereco() {
+<span class="nc" id="L89">        return endereco;</span>
+    }
+
+    public void setEndereco(Endereco endereco) {
+<span class="nc" id="L93">        this.endereco = endereco;</span>
+<span class="nc" id="L94">    }</span>
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    public List&lt;Contato&gt; getContatos() {
+<span class="nc" id="L98">        return this.contatos;</span>
+    }
+
+    public void setContatos(List&lt;Contato&gt; contatos) {
+<span class="nc" id="L102">        this.contatos = contatos;</span>
+<span class="nc" id="L103">    }</span>
+
+    @OneToMany(mappedBy = &quot;dono&quot;, orphanRemoval = true)
+    public List&lt;Pet&gt; getPetsCadastrados() {
+<span class="nc" id="L107">        return this.petsCadastrados;</span>
+    }
+
+    public void setPetsCadastrados(List&lt;Pet&gt; petsCadastrados) {
+<span class="nc" id="L111">        this.petsCadastrados = petsCadastrados;</span>
+<span class="nc" id="L112">    }</span>
+
+    @Column(nullable = false)
+    public String getNome() {
+<span class="nc" id="L116">        return nome;</span>
+    }
+
+    public void setNome(String nome) {
+<span class="nc" id="L120">        this.nome = nome;</span>
+<span class="nc" id="L121">    }</span>
+
+    public String getPerfil() {
+<span class="nc" id="L124">        return perfil;</span>
+    }
+
+    public void setPerfil(String perfil) {
+<span class="nc" id="L128">        this.perfil = perfil;</span>
+<span class="nc" id="L129">    }</span>
+
+    public void atualizarInfo(String nome, String senha, String perfil) {
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (nome != null) {</span>
+<span class="nc" id="L133">            this.setNome(nome);</span>
+        }
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (senha != null) {</span>
+<span class="nc" id="L136">            this.setSenha(senha);</span>
+        }
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (perfil != null) {</span>
+<span class="nc" id="L139">            this.setPerfil(perfil);</span>
+        }
+<span class="nc" id="L141">    }</span>
+
+    public void adicionarContato(String nome, String tipo, String info) throws HttpError {
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        for (Contato contato : this.contatos) {</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if (contato.getNome().equals(nome)) {</span>
+<span class="nc" id="L146">                throw new HttpErrors.BadRequest(&quot;O usuário já tem um contato com este nome&quot;);</span>
+            }
+<span class="nc" id="L148">        }</span>
+
+<span class="nc" id="L150">        Contato novoContato = new Contato(nome, tipo, info);</span>
+
+<span class="nc" id="L152">        this.contatos.add(novoContato);</span>
+<span class="nc" id="L153">    }</span>
+
+    public void removerContato(String nome) throws HttpError {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for (Contato contato : this.contatos) {</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (contato.getNome().equals(nome)) {</span>
+<span class="nc" id="L158">                this.contatos.remove(contato);</span>
+<span class="nc" id="L159">                return;</span>
+            }
+<span class="nc" id="L161">        }</span>
+
+<span class="nc" id="L163">        throw new HttpErrors.NotFound(&quot;Usuário não possui contato com este nome&quot;);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L168">        int hash = 0;</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L170">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (!(object instanceof Usuario)) {</span>
+<span class="nc" id="L177">            return false;</span>
+        }
+<span class="nc" id="L179">        Usuario other = (Usuario) object;</span>
+<span class="nc bnc" id="L180" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.getId() != null) || (this.id != null &amp;&amp; !this.id.equals(other.getId()))) {</span>
+<span class="nc" id="L181">            return false;</span>
+        }
+<span class="nc" id="L183">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L188">        return &quot;modelo.Usuario[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdotantesResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Adopet</a> &gt; <a href="index.source.html" class="el_package">com.trabappcorp.Adopet</a> &gt; <span class="el_source">AdotantesResource.java</span></div><h1>AdotantesResource.java</h1><pre class="source lang-java linenums">package com.trabappcorp.Adopet;
+
+import DAO.PetDAO;
+import DAO.UsuarioDAO;
+import DAO.VariacaoDAO;
+import Utils.JSONArrayBuilder;
+import Utils.JSONBuilder;
+import Utils.ValidationWrapper;
+import filters.Authorize;
+import filters.UserParam;
+import java.text.SimpleDateFormat;
+import modelo.Pet;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import modelo.Adotante;
+import modelo.FiltroAdotante;
+import modelo.Usuario;
+import modelo.Variacao;
+
+@Path(&quot;/adotantes&quot;)
+<span class="nc" id="L39">public class AdotantesResource {</span>
+
+    private @Context
+    HttpServletRequest servletRequest;
+
+    @GET
+    @Path(&quot;/filtro&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFiltro() {
+
+<span class="nc" id="L50">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+
+<span class="nc" id="L54">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L57">                throw new HttpErrors.Unauthorized(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L60">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L62">            FiltroAdotante filtro = adotante.getFiltro();</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            if (filtro == null) {</span>
+<span class="nc" id="L65">                filtro = new FiltroAdotante();</span>
+            }
+
+<span class="nc" id="L68">            JSONBuilder filtroJson = new JSONBuilder();</span>
+<span class="nc" id="L69">            filtroJson</span>
+<span class="nc" id="L70">                    .add(&quot;id&quot;, filtro.getId())</span>
+<span class="nc" id="L71">                    .add(&quot;alturaMenor&quot;, filtro.getAlturaMenor())</span>
+<span class="nc" id="L72">                    .add(&quot;gastoMensalMenor&quot;, filtro.getGastoMensalMenor())</span>
+<span class="nc" id="L73">                    .add(&quot;pesoMenor&quot;, filtro.getPesoMenor())</span>
+<span class="nc" id="L74">                    .add(&quot;porte&quot;, filtro.getPorte())</span>
+<span class="nc" id="L75">                    .add(&quot;raca&quot;, filtro.getRaca())</span>
+<span class="nc" id="L76">                    .add(&quot;especie&quot;, filtro.getEspecie());</span>
+
+<span class="nc" id="L78">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L79">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L81">                                    .add(&quot;filtroAdotante&quot;, filtroJson)</span>
+<span class="nc" id="L82">                                    .build()</span>
+<span class="nc" id="L83">                    ).build();</span>
+
+<span class="nc" id="L85">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L86">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L87">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L89">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L90">                                    .build()</span>
+<span class="nc" id="L91">                    ).build();</span>
+<span class="nc" id="L92">        } catch (Exception ex) {</span>
+<span class="nc" id="L93">            System.out.println(ex);</span>
+<span class="nc" id="L94">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L96">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L97">                    .build();</span>
+        }
+    }
+
+    @POST
+    @Path(&quot;/filtro&quot;)
+    @Authorize
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response updateFiltro(
+            @FormParam(&quot;alturaMenor&quot;) String alturaMenor_str,
+            @FormParam(&quot;gastoMensalMenor&quot;) String gastoMensalMenor_str,
+            @FormParam(&quot;pesoMenor&quot;) String pesoMenor_str,
+            @FormParam(&quot;raca&quot;) String raca,
+            @FormParam(&quot;porte&quot;) String porte,
+            @FormParam(&quot;especie&quot;) String especie
+    ) {
+<span class="nc" id="L114">        JSONBuilder responseJson = new JSONBuilder();</span>
+
+        try {
+            
+<span class="nc" id="L118">            Usuario usuario = (Usuario) this.servletRequest.getAttribute(&quot;usuario&quot;);</span>
+
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (!usuario.getPerfil().equals(&quot;adotante&quot;)) {</span>
+<span class="nc" id="L121">                throw new HttpErrors.Unauthorized(&quot;Usuário autenticado não é um adotante&quot;);</span>
+            }
+
+<span class="nc" id="L124">            Adotante adotante = (Adotante) usuario;</span>
+
+<span class="nc" id="L126">            FiltroAdotante filtro = adotante.getFiltro();</span>
+
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (ValidationWrapper.isSet(raca)) {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if(raca.equals(&quot;null&quot;)) raca = null;</span>
+<span class="nc" id="L130">                filtro.setRaca(raca);</span>
+            }
+<span class="nc bnc" id="L132" title="All 2 branches missed.">            if (ValidationWrapper.isSet(especie)) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                if(especie.equals(&quot;null&quot;)) especie = null;</span>
+<span class="nc" id="L134">                filtro.setEspecie(especie);</span>
+            }
+<span class="nc bnc" id="L136" title="All 2 branches missed.">            if (ValidationWrapper.isSet(porte)) {</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                if(porte.equals(&quot;null&quot;)) porte = null;</span>
+<span class="nc" id="L138">                filtro.setPorte(porte);</span>
+            }
+
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if (ValidationWrapper.isSet(alturaMenor_str)) {                </span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if(alturaMenor_str.equals(&quot;null&quot;)) filtro.setAlturaMenor(null);</span>
+                else {
+<span class="nc" id="L144">                    Double alturaMenor = ValidationWrapper.parseDouble(&quot;alturaMenor&quot;, alturaMenor_str);</span>
+<span class="nc" id="L145">                    filtro.setAlturaMenor(alturaMenor);</span>
+                }
+            }
+<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (ValidationWrapper.isSet(gastoMensalMenor_str)) {                </span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                if(gastoMensalMenor_str.equals(&quot;null&quot;)) filtro.setGastoMensalMenor(null);</span>
+                else {                
+<span class="nc" id="L151">                    Double gastoMensalMenor = ValidationWrapper.parseDouble(&quot;gastoMensalMenor&quot;, gastoMensalMenor_str);</span>
+<span class="nc" id="L152">                    filtro.setGastoMensalMenor(gastoMensalMenor);</span>
+                }
+            }
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            if (ValidationWrapper.isSet(pesoMenor_str)) {</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                if(pesoMenor_str.equals(&quot;null&quot;)) filtro.setPesoMenor(null);</span>
+                else {                
+<span class="nc" id="L158">                    Double pesoMenor = ValidationWrapper.parseDouble(&quot;pesoMenor&quot;, pesoMenor_str);</span>
+<span class="nc" id="L159">                    filtro.setPesoMenor(pesoMenor);</span>
+                }
+            }
+
+<span class="nc" id="L163">            UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();</span>
+<span class="nc" id="L164">            usuarioDAO.persist(usuario);</span>
+
+<span class="nc" id="L166">            return Response.status(Response.Status.OK)</span>
+<span class="nc" id="L167">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L169">                                    .add(&quot;mensagem&quot;, &quot;Filtro atualizado com sucesso&quot;)</span>
+<span class="nc" id="L170">                                    .build()</span>
+<span class="nc" id="L171">                    ).build();</span>
+<span class="nc" id="L172">        } catch (HttpErrors.HttpError httpError) {</span>
+<span class="nc" id="L173">            return Response.status(httpError.getStatus())</span>
+<span class="nc" id="L174">                    .entity(</span>
+                            responseJson
+<span class="nc" id="L176">                                    .add(&quot;mensagem&quot;, httpError.getMessage())</span>
+<span class="nc" id="L177">                                    .build()</span>
+<span class="nc" id="L178">                    ).build();</span>
+<span class="nc" id="L179">        } catch (Exception ex) {</span>
+<span class="nc" id="L180">            System.out.println(ex);</span>
+<span class="nc" id="L181">            return Response.status(</span>
+                    Response.Status.INTERNAL_SERVER_ERROR
+<span class="nc" id="L183">            ).entity(responseJson.add(&quot;mensagem&quot;, &quot;Erro interno&quot;).build())</span>
+<span class="nc" id="L184">                    .build();</span>
+        }
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
